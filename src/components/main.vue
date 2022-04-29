@@ -1,6 +1,6 @@
 <template>
 	<div id="container">
-		<i class="el-icon-setting setting" @click="setting"></i>
+			<i class="el-icon-setting setting" @click="setting"></i>
 		<h2>{{ title }}</h2>
 		<div class="search">
 			<el-input
@@ -172,46 +172,6 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
-* {
-	margin: 0;
-	padding: 0;
-}
-
-a {
-	display: inline-block;
-	font-style: normal;
-	text-decoration: none;
-	color: #00adeb;
-	position: relative;
-}
-
-em {
-	font-style: normal !important;
-}
-
-img {
-	vertical-align: bottom;
-}
-li {
-	list-style: none;
-}
-div,
-input {
-	box-sizing: border-box;
-}
-
-.el-message-box__wrapper,
-.el-drawer__wrapper {
-	background: rgba(0, 0, 0, 0.25);
-	backdrop-filter: blur(5px);
-}
-
-.el-message-box__title {
-	font-weight: bold;
-	color: #00adeb;
-}
-</style>
 <style scoped lang="scss">
 @keyframes SettingAni {
 	0% {
@@ -244,6 +204,9 @@ input {
 	padding: 40px 60px 80px;
 	box-shadow: 2px 2px 20px 5px #eee;
 	position: relative;
+	border-radius: 10px;
+	background: var(--bg-white);
+
 }
 
 .setting {

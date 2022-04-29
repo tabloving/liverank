@@ -3,6 +3,8 @@ import App from './App.vue';
 import store from './store';
 import Utils from './Utils'
 
+import './style/global.style.scss'
+
 import { Input, Notification, MessageBox, Icon, Message, Drawer } from 'element-ui';
 
 let comps = { Input, Icon, Drawer };

@@ -1,0 +1,120 @@
+:root {
+  --balck: #444;
+  --white: #fff;
+  --bg-black: rgba(17,17,17,0.8);
+  --bg-white: rgba(255,255,255,0.75);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	display: inline-block;
+	font-style: normal;
+	text-decoration: none;
+	color: #00adeb;
+	position: relative;
+}
+
+em {
+	font-style: normal !important;
+}
+
+img {
+	vertical-align: bottom;
+}
+li {
+	list-style: none;
+}
+div,
+input {
+	box-sizing: border-box;
+}
+
+.el-message-box__wrapper,
+.el-drawer__wrapper {
+	background: rgba(0, 0, 0, 0.25);
+	backdrop-filter: blur(5px);
+}
+
+.el-message-box__title {
+	font-weight: bold;
+	color: #00adeb;
+}
+
+css-doodle {
+  --color: @p(#2EC4B6, #E71D36, #FF9F1C);
+  --color-fade: var(--color)@repeat2(@p([0-9a-b]));
+  --bg: @svg(
+    <svg viewBox="0 0 1000 1000">
+      @repeat240(
+        <circle cx="@r(20, 980)" cy="@r(20, 980)" r="@r(.01, 10)"
+          fill=`var(--color-fade)`
+        />
+      )
+      @repeat100(<path
+        d="M @r(1000) @r(1000) l @r(-30, 30) @r(-200, 500)"
+        stroke=`var(--color)`
+        stroke-width="@r(.01, .6)"
+        stroke-dasharray="5 @ri(5, 20)"
+      />)
+      @repeat20(<path
+        d="M @r(1000) @r(1000) l @r(-30, 30) @r(-20, 50)"
+        stroke=`var(--color-fade)`
+        stroke-width="@r(8, 15)"
+        stroke-dasharray="5 @ri(5, 20)"
+      />)
+    </svg>
+  );
+  --noise: @svg-filter(
+    <svg>
+      <filter>
+        <feTurbulence type="fractalNoise" baseFrequency=".016" numOctaves="1" seed="@r(1000)" />
+        <feDisplacementMap in="SourceGraphic" scale="10" />
+      </filter>
+    </svg>
+  );
+
+  --rule: (
+    :doodle {
+      @grid: 12x1 / 100vw 100vh;
+      background-image: var(--bg);
+      background-position: 50%;
+      filter: var(--noise);
+      position: fixed;
+      left: 0;
+    }
+
+    @size: 100% 50%;
+    position: absolute;
+    top: 20%;
+    transform: rotate(calc((@i() - 1) * 360deg / @size()));
+
+    :after {
+      --c: var(--color);
+      --s: @r(5);
+      content: '';
+      position: absolute;
+      @size: @r(40vmin, 61vmin) @r(12vmin, 17vmin);
+      border-left: @r(3px) solid @var(--c);
+      border-radius: 50vmin;
+      background:
+        radial-gradient(@var(--c) 50%, transparent 0%) 1vmin 42% / 3px 6px no-repeat,
+        radial-gradient(@var(--c) 50%, transparent 0%) 1vmin 58% / 3px 6px no-repeat,
+        @m20(linear-gradient(to right, @var(--c), transparent @r(50%, 80%)) 0 @r(100%) / @r(20%) 1px no-repeat),
+        linear-gradient(to right, @var(--c), transparent @r(50%, 80%)) 0 50% / @r(40%, 60%) 1px no-repeat,
+        linear-gradient(to right, rgba(255, 255, 255, .015), transparent);
+      transform: rotateY(0) scaleX(@var(--s)) translateZ(50vmin);
+      transform-origin: 0 50%;
+      will-change: transform;
+      animation: r @r(10s, 20s) linear infinite;
+      animation-delay: -@r(50s);
+    }
+
+    @keyframes r {
+      to { transform: rotateY(-1turn) scaleX(@var(--s)) translateZ(50vmin) }
+    }
+  );
+}

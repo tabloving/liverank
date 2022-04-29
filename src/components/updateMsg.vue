@@ -64,44 +64,19 @@ export default {
 		};
 	},
 	methods: {
-		...mapMutations(["close"]),
+		...mapMutations(["drawerControl"]),
+		close(){
+			this.drawerControl(['updatemsg','off'])
+		}
 	},
 };
 </script>
-<style>
-::-webkit-scrollbar {
-  margin-right: 200px;
-  width: 4px;
-} /* 这是针对缺省样式 (必须的) */
-::-webkit-scrollbar-track {
-	background-color: #eee;
-} /* 滚动条的滑轨背景颜色 */
-
-::-webkit-scrollbar-thumb {
-  border-radius: 100px;
-	background-color: rgba(0, 173, 235,0.8);
-} /* 滑块颜色 */
-
-::-webkit-scrollbar-button {
-  display: none;
-} /* 滑轨两头的监听按钮颜色 */
-
-::-webkit-scrollbar-corner {
-	background-color: #fff;
-} /* 横向滚动条和纵向滚动条相交处尖角的颜色 */
-</style>
 
 <style scoped lang="scss">
 ::v-deep .el-drawer.rtl {
 	min-width: 440px;
 	padding: 0 1px;
 	// overflow-x: visible;
-
-	#el-drawer__title {
-		font-size: 24px;
-		font-weight: bold;
-		color: #00adeb;
-	}
 	.section {
 		width: 86%;
 		border: 1px solid #f2f2f2;

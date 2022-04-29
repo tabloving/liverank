@@ -5,9 +5,9 @@ import Utils from './Utils'
 
 import './style/global.style.scss'
 
-import { Input, Notification, MessageBox, Icon, Message, Drawer } from 'element-ui';
+import { Input, Notification, MessageBox, Icon, Message, Drawer, Switch } from 'element-ui';
 
-let comps = { Input, Icon, Drawer };
+let comps = { Input, Icon, Drawer, Switch };
 Object.entries(comps).forEach(([key, comp]) => {
   Vue.use(comp);
 });

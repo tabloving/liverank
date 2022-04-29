@@ -1,6 +1,6 @@
 <template>
 	<div id="container">
-			<i class="el-icon-setting setting" @click="setting"></i>
+		<i class="el-icon-setting setting" @click="setting"></i>
 		<h2>{{ title }}</h2>
 		<div class="search">
 			<el-input
@@ -8,7 +8,8 @@
 				v-model.trim="keyword"
 				:placeholder="placeholder"
 				@keyup.enter.native.prevent="search"
-			></el-input>
+			>
+			</el-input>
 			<div :class="[keyword ? '' : 'disabled', 'button']" @click="search">
 				查询
 			</div>
@@ -64,7 +65,8 @@
 			</div>
 		</div>
 		<div class="openMsg" @click="open">更新公告</div>
-		<update-msg :flag="drawer" ref="drawer"></update-msg>
+		<update-msg :flag="updatemsg" ref="updatemsg"></update-msg>
+		<settings :flag="settings" ref="settings"></settings>
 	</div>
 </template>
 
@@ -72,12 +74,14 @@
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import updateMsg from "./updateMsg.vue";
 import Storage from "../storage";
+import Settings from "./settings.vue";
 
 let defaultID = Storage.get("roomid") || "变质的洋流";
 export default {
 	name: "Main",
 	components: {
 		updateMsg,
+		Settings,
 	},
 	data() {
 		return {
@@ -95,7 +99,7 @@ export default {
 	mounted() {
 		let dataInfo;
 		this.$nextTick(() => {
-			dataInfo = this.$refs.drawer.list[0];
+			dataInfo = this.$refs.updatemsg.list[0];
 			let title = `${dataInfo.date} 更新公告`;
 			let str = dataInfo.main
 				.map((item, index) => {
@@ -122,12 +126,15 @@ export default {
 		});
 	},
 	computed: {
-		...mapState(["liveInfo", "resData", "drawer"]),
+		...mapState(["liveInfo", "resData", "updatemsg","settings"]),
 		...mapGetters(["liveMsg", "toRoom", "liveTitle"]),
 	},
 	methods: {
-		...mapMutations(["open"]),
+		...mapMutations(["drawerControl"]),
 		...mapActions(["doSearch"]),
+		open(){
+			this.drawerControl(['updatemsg','on'])
+		},
 		search() {
 			this.$Utils.clearTimer(this.timer);
 			this.timer = setTimeout(() => {
@@ -206,7 +213,6 @@ export default {
 	position: relative;
 	border-radius: 10px;
 	background: var(--bg-white);
-
 }
 
 .setting {

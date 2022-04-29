@@ -32,7 +32,8 @@ export default new Vuex.Store({
       online: 0,
       watched: 0,
     },
-    drawer: false
+    updatemsg: false,
+    settings: true
   },
   getters: {
     liveMsg(state) {
@@ -115,12 +116,11 @@ export default new Vuex.Store({
           }
         })
     },
-    open(state){
-      state.drawer = true
+    drawerControl(state,payload){
+      let [target,op] = payload
+      let ret = op === 'on' ? true : false
+      state[target] = ret
     },
-    close(state){
-      state.drawer = false
-    }
   },
   actions: {
     doSearch({ commit, state }, payload) {

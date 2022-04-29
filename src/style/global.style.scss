@@ -1,5 +1,5 @@
 :root {
-  --balck: #444;
+  --black: #444;
   --white: #fff;
   --bg-black: rgba(17,17,17,0.8);
   --bg-white: rgba(255,255,255,0.75);
@@ -29,9 +29,31 @@ li {
 	list-style: none;
 }
 div,
-input {
+input,
+section {
 	box-sizing: border-box;
 }
+
+::-webkit-scrollbar {
+  margin-right: 200px;
+  width: 4px;
+} /* 这是针对缺省样式 (必须的) */
+::-webkit-scrollbar-track {
+	background-color: #eee;
+} /* 滚动条的滑轨背景颜色 */
+
+::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+	background-color: rgba(0, 173, 235,0.8);
+} /* 滑块颜色 */
+
+::-webkit-scrollbar-button {
+  display: none;
+} /* 滑轨两头的监听按钮颜色 */
+
+::-webkit-scrollbar-corner {
+	background-color: #fff;
+} /* 横向滚动条和纵向滚动条相交处尖角的颜色 */
 
 .el-message-box__wrapper,
 .el-drawer__wrapper {
@@ -43,6 +65,14 @@ input {
 	font-weight: bold;
 	color: #00adeb;
 }
+
+::v-deep .el-drawer.rtl {
+  #el-drawer__title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00adeb;
+    }
+  }
 
 css-doodle {
   --color: @p(#2EC4B6, #E71D36, #FF9F1C);

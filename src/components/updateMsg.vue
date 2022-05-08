@@ -94,6 +94,9 @@ export default {
 
 		.des {
 			margin-bottom: 6px;
+			@include themed() {
+		   color: t('text-color')
+  };
 		}
 
 		li {

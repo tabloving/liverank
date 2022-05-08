@@ -178,10 +178,12 @@ export default {
 	// border: 1px solid red;
 	margin: 60px auto 0;
 	padding: 40px 60px 80px;
-	box-shadow: 2px 2px 20px 5px #eee;
 	position: relative;
 	border-radius: 10px;
-	background: var(--bg-white);
+	@include themed() {
+    background: t('sec-bg');
+		box-shadow: t('box-shadow')
+  };
 }
 
 .setting {
@@ -190,6 +192,9 @@ export default {
 	top: 20px;
 	right: 20px;
 	cursor: pointer;
+	@include themed() {
+    color: t('text-color')
+  };
 	animation: SettingAni 5s infinite;
 
 	&:hover {
@@ -394,6 +399,9 @@ h2 {
 .maincon {
 	width: 100px;
 	display: inline-block;
+	@include themed() {
+    color: t('text-color')
+  };
 }
 
 .uname .maincon {

@@ -16,11 +16,13 @@ export default {
 
 <style lang="scss">
 #app {
+	@include themed() {
+    background: t('background-color');
+  };
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
-	color: var(--black);
   height: 100vh;
   overflow: hidden;
 }

@@ -104,6 +104,9 @@ export default {
 				: (this.model[i] = getLocal(i));
 		}
 	},
+	mounted() {
+		this.setTheme();
+	},
 	methods: {
 		...mapMutations(["drawerControl"]),
 		close() {
@@ -138,10 +141,21 @@ export default {
 						}
 						this.validateErr = false;
 						this.drawerControl(["settings", "off"]);
+						this.$message({
+							message: '您取消了设置',
+							type: 'warning'
+						})
 					})
 					.catch((_) => {});
 			} else {
 				this.drawerControl(["settings", "off"]);
+			}
+		},
+		setTheme() {
+			if (getLocal("isDark") === true) {
+				window.document.documentElement.setAttribute("data-theme", "dark");
+			} else {
+				window.document.documentElement.setAttribute("data-theme", "light");
 			}
 		},
 		handleSave() {
@@ -177,22 +191,22 @@ export default {
 					setLocal(name, newVal);
 				}
 			});
-
+			this.setTheme();
 			this.drawerControl(["settings", "off"]);
 
-			let res = values.every(({name,oldVal,newVal})=>{
-				return oldVal === newVal
-			})
-			if(res){
-				this.$message({
-				message: "没有数据更改！",
-				type: "warning",
+			let res = values.every(({ name, oldVal, newVal }) => {
+				return oldVal === newVal;
 			});
-			}else{
+			if (res) {
 				this.$message({
-				message: "恭喜你，设置成功！",
-				type: "success",
-			});
+					message: "没有数据更改！",
+					type: "warning",
+				});
+			} else {
+				this.$message({
+					message: "恭喜你，设置成功！",
+					type: "success",
+				});
 			}
 		},
 	},
@@ -223,7 +237,9 @@ export default {
 		padding: 14px 20px 20px;
 		position: relative;
 		margin: 10px 0;
-		color: var(--black);
+		@include themed() {
+			color: t("text-color");
+		}
 		&:not(:last-of-type)::after {
 			content: "";
 			width: 90%;
@@ -281,7 +297,7 @@ export default {
 		width: 330px;
 		height: 50px;
 		border-radius: 0;
-		color: var(--white);
+		color: #fff;
 		font-size: 18px;
 		letter-spacing: 2px;
 		border: none;

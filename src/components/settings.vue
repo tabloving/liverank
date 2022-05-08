@@ -31,6 +31,7 @@
 				class="switch"
 				v-if="item.type === 'switch'"
 				v-model="model[item.model]"
+				:disabled="item.disabled"
 			>
 			</el-switch>
 			<transition name="fade" mode="out-in">
@@ -68,9 +69,9 @@ export default {
 		return {
 			validateErr: false,
 			model: {
-				isDark: true,
+				isDark: false,
 				refresh: true,
-				isLock: false,
+				isLock: true,
 				defaultID: DEFAULT_ID,
 			},
 			list: [
@@ -91,6 +92,7 @@ export default {
 					type: "switch",
 					des: "开启后，将会每20s自动刷新一次数据，建议开启",
 					model: "refresh",
+					disabled: true
 				},
 			],
 		};

@@ -94,7 +94,12 @@ export default {
 	},
 	created() {
 		this.$store.commit("getData", this);
-		this.doSearch(this);
+		this.$nextTick(()=>{
+			if(this.$refs.settings.model.refresh){
+        this.doSearch(this);
+			}
+		})
+		
 	},
 	mounted() {
 		let dataInfo;

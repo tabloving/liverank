@@ -124,9 +124,9 @@ export default new Vuex.Store({
   },
   actions: {
     doSearch({ commit, state }, payload) {
-     setInterval(() => {
+    setInterval(() => {
       state.resData && commit('getData', payload);
-      }, 15000)
+      }, 20000)
     }
   },
   modules: {

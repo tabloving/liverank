@@ -23,6 +23,16 @@ export default {
 		return {
 			list: [
 				{
+					date: "2022.5.8",
+					des: "功能迁移，修复BUG。",
+					main: [
+						"设置界面全新优化",
+						"新增夜间模式开关",
+						"修复自动更新数据引起的频闪问题",
+						"待更新：自动刷新数据开关"
+					],
+				},
+				{
 					date: "2022.4.20",
 					des: "本次更新主要新增部分功能，修复BUG。",
 					main: [
@@ -40,22 +50,22 @@ export default {
 						"新增自定义默认搜索房间",
 					],
 				},
-        {
+				{
 					date: "2022.4.8",
 					des: "UI优化，视觉区分明显。",
 					main: [
 						"UI美化，在线与离线有颜色提示",
-            "新增点击标题跳转到直播间",
+						"新增点击标题跳转到直播间",
 						"对未知数据进行定义默认值",
 						"其它问题修复",
 					],
 				},
-			{
+				{
 					date: "2022.4.6",
 					des: "初版发布，能实现基本查询。",
 					main: [
 						"实现基本查询功能",
-            "支持房间号、UID、房间ID等查询条件",
+						"支持房间号、UID、房间ID等查询条件",
 						"能够查询B站取消显示的人气数",
 						"自动定时刷新数据",
 					],
@@ -65,9 +75,9 @@ export default {
 	},
 	methods: {
 		...mapMutations(["drawerControl"]),
-		close(){
-			this.drawerControl(['updatemsg','off'])
-		}
+		close() {
+			this.drawerControl(["updatemsg", "off"]);
+		},
 	},
 };
 </script>
@@ -78,7 +88,7 @@ export default {
 	.section {
 		width: 86%;
 		border: 1px solid #f2f2f2;
-    border-radius: 8px;
+		border-radius: 8px;
 		padding: 14px 18px;
 		text-align: left;
 		font-size: 16px;
@@ -95,8 +105,8 @@ export default {
 		.des {
 			margin-bottom: 6px;
 			@include themed() {
-		   color: t('text-color')
-  };
+				color: t("text-color");
+			}
 		}
 
 		li {

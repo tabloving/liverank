@@ -1,6 +1,6 @@
 <template>
 	<div id="container">
-		<i class="el-icon-setting setting" @click="setting"></i>
+		<i class="el-icon-setting setting" @click="open('settings')"></i>
 		<h2>{{ title }}</h2>
 		<div class="search">
 			<el-input
@@ -64,7 +64,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="openMsg" @click="open">更新公告</div>
+		<div class="openMsg" @click="open('updatemsg')">更新公告</div>
 		<update-msg :flag="updatemsg" ref="updatemsg"></update-msg>
 		<settings :flag="settings" ref="settings"></settings>
 	</div>
@@ -76,7 +76,7 @@ import updateMsg from "./updateMsg.vue";
 import Storage from "../storage";
 import Settings from "./settings.vue";
 
-let defaultID = Storage.get("roomid") || "变质的洋流";
+let defaultID = Storage.get("defaultID") || "变质的洋流";
 export default {
 	name: "Main",
 	components: {
@@ -132,8 +132,8 @@ export default {
 	methods: {
 		...mapMutations(["drawerControl"]),
 		...mapActions(["doSearch"]),
-		open(){
-			this.drawerControl(['updatemsg','on'])
+		open(name){
+			this.drawerControl([name,'on'])
 		},
 		search() {
 			this.$Utils.clearTimer(this.timer);
@@ -142,38 +142,7 @@ export default {
 				this.$store.commit("getData", this);
 				this.$Utils.clearTimer(this.timer);
 			}, 300);
-		},
-		setting() {
-			let title = `当前值：${defaultID}`;
-			let content = "📢 数据存储在本地20天，清缓存会同时清除数据，望周知！";
-			this.$prompt(content, title, {
-				confirmButtonText: "就这样",
-				cancelButtonText: "下次一定",
-				inputPlaceholder: "请输入您希望默认查询的信息 ^_^",
-				inputValidator: (value) => {
-					if (value.length < 1) {
-						return "输入不能为空";
-					} else {
-						let reg = /^\S*$/;
-						let res = reg.test(value);
-						return res ? true : "输入信息不能包含空格";
-					}
-				},
-			})
-				.then(({ value }) => {
-					Storage.set("roomid", value, "20");
-					this.$message({
-						type: "success",
-						message: "默认查询值已更改为： " + value,
-					});
-				})
-				.catch(() => {
-					this.$message({
-						type: "info",
-						message: "您已取消设定",
-					});
-				});
-		},
+		}
 	},
 };
 </script>

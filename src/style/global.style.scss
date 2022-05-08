@@ -66,7 +66,8 @@ section {
 	color: #00adeb;
 }
 
-::v-deep .el-drawer.rtl {
+ .el-drawer.rtl {
+  width: 330px !important;
   #el-drawer__title {
       font-size: 24px;
       font-weight: bold;

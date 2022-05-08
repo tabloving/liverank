@@ -74,8 +74,6 @@ export default {
 
 <style scoped lang="scss">
 ::v-deep .el-drawer.rtl {
-	min-width: 440px;
-	padding: 0 1px;
 	// overflow-x: visible;
 	.section {
 		width: 86%;

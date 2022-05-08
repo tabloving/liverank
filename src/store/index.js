@@ -33,7 +33,7 @@ export default new Vuex.Store({
       watched: 0,
     },
     updatemsg: false,
-    settings: true
+    settings: false
   },
   getters: {
     liveMsg(state) {

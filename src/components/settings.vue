@@ -19,9 +19,9 @@
 				v-model.trim="model[item.model]"
 				:class="[validateErr ? 'err' : '']"
 				:placeholder="item.placeholder"
-				:disabled="model['isLock']"
+				:disabled="model[item.disabledKey]"
 				:ref="item.refName"
-				@change="validate(item.validateMethod)"
+				@change="validate(item['validateMethod'])"
 				show-word-limit
 				autofocus
 				clearable
@@ -39,6 +39,15 @@
 					{{ item.validatemsg }}
 				</p>
 			</transition>
+			<!-- 快捷标签 -->
+			<div class="hottags" v-if="item.tags && model.hotList.length">
+				<span class="tag" v-for="(tag, index) in model[item.list]" :key="tag"
+					>{{ tag }}
+					<i class="el-icon-circle-close" @click="deleteTag(index)"></i
+				></span>
+			</div>
+			<p class="tagmessage" v-else>您还没有添加任何快捷标签！</p>
+
 			<p v-if="item.des" class="des">{{ item.des }}</p>
 		</section>
 
@@ -55,6 +64,7 @@
 <script>
 import Storage from "../storage";
 import { mapMutations } from "vuex";
+import { stringify } from "qs";
 const STORE_DAYS = 20;
 const DEFAULT_ID = "变质的洋流";
 function getLocal(name) {
@@ -64,7 +74,8 @@ function setLocal(name, value) {
 	Storage.set(name, value, STORE_DAYS);
 }
 export default {
-	props: ["flag"],
+	name: "Settings",
+	props: ["flag", "changeHot"],
 	data() {
 		return {
 			validateErr: false,
@@ -72,6 +83,10 @@ export default {
 				isDark: false,
 				refresh: true,
 				isLock: true,
+				showHot: true,
+				tagInput: "",
+				isFull: false,
+				hotList: [DEFAULT_ID, "是超可爱吖","lolm烟火"],
 				defaultID: DEFAULT_ID,
 			},
 			list: [
@@ -84,6 +99,7 @@ export default {
 					validateMethod: "validateDefaultID",
 					model: "defaultID",
 					refName: "defaultID",
+					disabledKey: "isLock",
 				},
 				{ title: "锁定默认查询", type: "switch", model: "isLock" },
 				{ title: "夜间模式开关", type: "switch", model: "isDark" },
@@ -92,19 +108,47 @@ export default {
 					type: "switch",
 					des: "开启后，将会每20s自动刷新一次数据，建议开启",
 					model: "refresh",
-					disabled: true
+					disabled: true,
+				},
+				{
+					title: "快捷标签开关",
+					type: "switch",
+					model: "showHot",
+				},
+				{
+					title: "快捷标签设置",
+					type: "input",
+					model: "tagInput",
+					disabledKey: 'isFull',
+					refName: "addTag",
+					tags: true,
+					list: "hotList",
+					placeholder: '请输入标签，按回车确认',
+					validateMethod: "validateHotTag",
 				},
 			],
 		};
 	},
 	created() {
-		let local = ["defaultID", "isLock", "refresh", "isDark"];
+		let local = [
+			"defaultID",
+			"isLock",
+			"refresh",
+			"isDark",
+			"showHot",
+			"hotList",
+		];
 
 		for (let i of local) {
 			getLocal(i) === undefined
 				? setLocal(i, this.model[i])
 				: (this.model[i] = getLocal(i));
 		}
+
+		this.$emit("changeHot", {
+			key: getLocal("showHot"),
+			list: getLocal("hotList"),
+		});
 	},
 	mounted() {
 		this.setTheme();
@@ -126,12 +170,31 @@ export default {
 				return true;
 			}
 		},
+		validateHotTag() {
+			let val = this.$refs.addTag[0].value;
+			if (this.model.hotList.indexOf(val) !== -1) {
+				this.$message({
+					type: "error",
+					message: `${val} 已经存在了！无需重复添加。`,
+				});
+			} else {
+				this.addTag(val);
+			}
+		},
 		validateIsSave() {
-			let target = ["defaultID", "isLock", "refresh", "isDark"];
+			let target = [
+				"defaultID",
+				"isLock",
+				"refresh",
+				"isDark",
+				"showHot",
+				"hotList",
+			];
 			let res = target.every((item) => {
-				return this.model[item] === getLocal(item);
+				let ret =
+					JSON.stringify(this.model[item]) === JSON.stringify(getLocal(item));
+				return ret;
 			});
-
 			if (!res) {
 				this.$confirm(
 					"你有未保存的数据，是否丢弃数据继续关闭？",
@@ -142,11 +205,12 @@ export default {
 							this.model[i] = getLocal(i);
 						}
 						this.validateErr = false;
+						
 						this.drawerControl(["settings", "off"]);
 						this.$message({
-							message: '您取消了设置',
-							type: 'warning'
-						})
+							message: "您取消了设置",
+							type: "warning",
+						});
 					})
 					.catch((_) => {});
 			} else {
@@ -159,6 +223,28 @@ export default {
 			} else {
 				window.document.documentElement.setAttribute("data-theme", "light");
 			}
+		},
+		addTag(tag) {
+			let len = this.model.hotList.length;
+			if (len < 5) {
+				this.model.hotList.push(tag);
+				this.model.tagInput = "";
+			} else {
+				this.model.isFull = true
+				this.model.tagInput = '最多支持5个，请删除后再添加'
+				this.$message({
+					type: "error",
+					message: "最多支持5个快捷标签！",
+				});
+			}
+		},
+		deleteTag(index) {
+			this.model.hotList.splice(index, 1);
+			this.model.isFull = false
+			this.model.tagInput = ''
+			this.$nextTick(()=>{
+				this.$refs.addTag[0].focus()
+			})
 		},
 		handleSave() {
 			if (this.validateErr) {
@@ -185,6 +271,16 @@ export default {
 					oldVal: getLocal("refresh"),
 					newVal: this.model.refresh,
 				},
+				{
+					name: "showHot",
+					oldVal: getLocal("showHot"),
+					newVal: this.model.showHot,
+				},
+				{
+					name: "hotList",
+					oldVal: getLocal("hotList"),
+					newVal: this.model.hotList,
+				},
 			];
 			values.forEach((item) => {
 				let { name, oldVal, newVal } = item;
@@ -194,10 +290,14 @@ export default {
 				}
 			});
 			this.setTheme();
+			this.$emit("changeHot", {
+				key: getLocal("showHot"),
+				list: getLocal("hotList"),
+			});
 			this.drawerControl(["settings", "off"]);
 
 			let res = values.every(({ name, oldVal, newVal }) => {
-				return oldVal === newVal;
+				return JSON.stringify(oldVal) === JSON.stringify(newVal);
 			});
 			if (res) {
 				this.$message({
@@ -292,6 +392,32 @@ export default {
 			font-size: 14px;
 			margin-top: 6px;
 			color: #f74444;
+		}
+
+		.tagmessage {
+			text-align: center;
+			margin-top: 6px;
+		}
+
+		.hottags {
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: start;
+			align-content: center;
+			margin: 10px 0;
+
+			.tag {
+				border: 1px solid #00adeb;
+				margin: 6px;
+				padding: 6px 10px;
+				border-radius: 4px;
+				cursor: pointer;
+				transition: 0.3s linear;
+
+				&:hover {
+					background: rgba($color: #00adeb, $alpha: 0.3);
+				}
+			}
 		}
 	}
 

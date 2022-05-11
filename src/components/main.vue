@@ -2,6 +2,7 @@
 	<div id="container">
 		<i class="el-icon-setting setting" @click="open('settings')"></i>
 		<h2>{{ title }}</h2>
+		<!-- search input -->
 		<div class="search">
 			<el-input
 				clearable
@@ -14,6 +15,17 @@
 				查询
 			</div>
 		</div>
+		<!-- hot tags -->
+		<div v-if="showHot" class="hotbox">
+			<span
+				class="hot"
+				v-for="key in hotList"
+				:key="key"
+				@click="hotSearch(key)"
+				>{{ key }}</span
+			>
+		</div>
+		<!-- main info -->
 		<div class="mainInfo">
 			<div :class="[liveInfo.status ? 'live' : '', 'uface']">
 				<img v-if="resData" class="ufacecover" :src="liveInfo.uface" />
@@ -66,7 +78,11 @@
 		</div>
 		<div class="openMsg" @click="open('updatemsg')">更新公告</div>
 		<update-msg :flag="updatemsg" ref="updatemsg"></update-msg>
-		<settings :flag="settings" ref="settings"></settings>
+		<settings
+			:flag="settings"
+			@changeHot="changeHot"
+			ref="settings"
+		></settings>
 	</div>
 </template>
 
@@ -90,16 +106,18 @@ export default {
 			keyword: "",
 			key: defaultID,
 			timer: null,
+			showHot: true,
+			hotList: [],
 		};
 	},
 	created() {
 		this.$store.commit("getData", this);
-		this.$nextTick(()=>{
-			if(this.$refs.settings.model.refresh){
-        this.doSearch(this);
+		// this.showHot = Storage.get("shwoHot");
+		this.$nextTick(() => {
+			if (this.$refs.settings.model.refresh) {
+				this.doSearch(this);
 			}
-		})
-		
+		});
 	},
 	mounted() {
 		let dataInfo;
@@ -131,14 +149,14 @@ export default {
 		});
 	},
 	computed: {
-		...mapState(["liveInfo", "resData", "updatemsg","settings"]),
+		...mapState(["liveInfo", "resData", "updatemsg", "settings"]),
 		...mapGetters(["liveMsg", "toRoom", "liveTitle"]),
 	},
 	methods: {
 		...mapMutations(["drawerControl"]),
 		...mapActions(["doSearch"]),
-		open(name){
-			this.drawerControl([name,'on'])
+		open(name) {
+			this.drawerControl([name, "on"]);
 		},
 		search() {
 			this.$Utils.clearTimer(this.timer);
@@ -147,7 +165,15 @@ export default {
 				this.$store.commit("getData", this);
 				this.$Utils.clearTimer(this.timer);
 			}, 300);
-		}
+		},
+		hotSearch(key) {
+			this.keyword = key;
+			this.search();
+		},
+		changeHot({ key, list }) {
+			this.showHot = key;
+			this.hotList = list;
+		},
 	},
 };
 </script>
@@ -186,9 +212,9 @@ export default {
 	position: relative;
 	border-radius: 10px;
 	@include themed() {
-    background: t('sec-bg');
-		box-shadow: t('box-shadow')
-  };
+		background: t("sec-bg");
+		box-shadow: t("box-shadow");
+	}
 }
 
 .setting {
@@ -198,8 +224,8 @@ export default {
 	right: 20px;
 	cursor: pointer;
 	@include themed() {
-    color: t('text-color')
-  };
+		color: t("text-color");
+	}
 	animation: SettingAni 5s infinite;
 
 	&:hover {
@@ -405,8 +431,8 @@ h2 {
 	width: 100px;
 	display: inline-block;
 	@include themed() {
-    color: t('text-color')
-  };
+		color: t("text-color");
+	}
 }
 
 .uname .maincon {
@@ -433,6 +459,32 @@ h2 {
 
 	&:hover {
 		color: #00adeb;
+	}
+}
+
+.hotbox {
+	@include themed() {
+		color: t("text-color");
+	}
+	text-align: left;
+	// color:#00adeb;
+	margin: 10px 0;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	justify-content: center;
+
+	.hot {
+		border: 1px solid #00adeb;
+		margin: 0 6px;
+		padding: 6px 10px;
+		border-radius: 4px;
+		cursor: pointer;
+		transition: 0.3s linear;
+
+		&:hover {
+			background: rgba($color: #00adeb, $alpha: 0.3);
+		}
 	}
 }
 </style>

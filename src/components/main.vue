@@ -5,12 +5,23 @@
 		<!-- search input -->
 		<div class="search">
 			<el-input
+				v-if="showHot"
 				clearable
 				v-model.trim="keyword"
 				:placeholder="placeholder"
 				@keyup.enter.native.prevent="search"
 			>
 			</el-input>
+			<el-autocomplete
+				v-else
+				clearable
+				v-model.trim="keyword"
+				:placeholder="placeholder"
+				:trigger-on-focus="false"
+				:fetch-suggestions="suggest"
+				@keyup.enter.native.prevent="search"
+				@select="search"
+			></el-autocomplete>
 			<div :class="[keyword ? '' : 'disabled', 'button']" @click="search">
 				查询
 			</div>
@@ -18,8 +29,8 @@
 		<!-- hot tags -->
 		<div v-if="showHot" class="hotbox">
 			<span
-				class="hot"
 				v-for="key in hotList"
+				:class="['hot', key === keyword ? 'active' : '']"
 				:key="key"
 				@click="hotSearch(key)"
 				>{{ key }}</span
@@ -78,11 +89,7 @@
 		</div>
 		<div class="openMsg" @click="open('updatemsg')">更新公告</div>
 		<update-msg :flag="updatemsg" ref="updatemsg"></update-msg>
-		<settings
-			:flag="settings"
-			@changeHot="changeHot"
-			ref="settings"
-		></settings>
+		<settings :flag="settings" @changeHot="changeHot" ref="settings"></settings>
 	</div>
 </template>
 
@@ -158,6 +165,18 @@ export default {
 		open(name) {
 			this.drawerControl([name, "on"]);
 		},
+		suggest(query,cb){
+			let list = this.hotList.map((item)=>{
+				return {'value': item}
+			})
+			const result = query ? list.filter(this.createFilter(query)) : list
+			cb(result)
+		},
+		createFilter(queryString) {
+        return (item) => {
+          return (item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
+        };
+      },
 		search() {
 			this.$Utils.clearTimer(this.timer);
 			this.timer = setTimeout(() => {
@@ -250,7 +269,7 @@ h2 {
 	justify-content: center;
 }
 
-.search .el-input {
+::v-deep .search .el-input {
 	width: 500px;
 	height: 100%;
 	font-size: 20px;
@@ -482,7 +501,8 @@ h2 {
 		cursor: pointer;
 		transition: 0.3s linear;
 
-		&:hover {
+		&:hover,
+		&.active {
 			background: rgba($color: #00adeb, $alpha: 0.3);
 		}
 	}

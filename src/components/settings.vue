@@ -17,7 +17,7 @@
 				v-if="item.type === 'input'"
 				maxlength="10"
 				v-model.trim="model[item.model]"
-				:class="[validateErr ? 'err' : '']"
+				:class="[item.validate && validateErr ? 'err' : '']"
 				:placeholder="item.placeholder"
 				:disabled="model[item.disabledKey]"
 				:ref="item.refName"
@@ -95,6 +95,7 @@ export default {
 					type: "input",
 					des: `📢 数据存储在本地${STORE_DAYS}天，清缓存会同时清除数据，望周知！`,
 					placeholder: "请输入您需要设置的值",
+					validate: true,
 					validatemsg: "输入不能为空。若想保持不变，请开启锁定",
 					validateMethod: "validateDefaultID",
 					model: "defaultID",

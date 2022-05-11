@@ -46,8 +46,8 @@
 					<i class="el-icon-circle-close" @click="deleteTag(index)"></i
 				></span>
 			</div>
-			<p class="tagmessage" v-else>您还没有添加任何快捷标签！</p>
-
+			<p class="tagmessage" v-if="item.tags && !model.hotList.length">您还没有添加任何快捷标签！</p>
+			
 			<p v-if="item.des" class="des">{{ item.des }}</p>
 		</section>
 

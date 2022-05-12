@@ -41,8 +41,15 @@
 			</transition>
 			<!-- 快捷标签 -->
 			<div class="hottags" v-if="item.tags && model.hotList.length">
-				<span class="tag" v-for="(tag, index) in model[item.list]" :key="tag.value"
-					>{{ tag.value }}
+				<span
+					class="tag"
+					v-for="(tag, index) in model[item.list]"
+					:key="tag.value"
+				>
+					<span class="label">
+						{{ tag.label }}
+					</span>
+					{{ tag.value }}
 					<i class="el-icon-circle-close" @click="deleteTag(index)"></i
 				></span>
 			</div>
@@ -89,8 +96,8 @@ export default {
 				tagInput: "",
 				isFull: false,
 				hotList: [
-					{ value: DEFAULT_ID, label: DEFAULT_ID },
-					{ value: "是超可爱吖", label: "是超可爱吖" },
+					{ value: DEFAULT_ID, label: "洋流" },
+					{ value: "是超可爱吖", label: "可爱" },
 				],
 				defaultID: DEFAULT_ID,
 			},
@@ -180,24 +187,22 @@ export default {
 			let str = this.$refs.addTag[0].value;
 			let val = REG.exec(str) ? REG.exec(str)[2] : str;
 			let label = REG.exec(str) ? REG.exec(str)[1] : str;
-			let list = JSON.parse(JSON.stringify(this.model.hotList))
+			let list = this.model.hotList;
 
-			for(let item of list){
-				if(item.label === label){
-					this.$message({
-					type: "error",
-					message: `别名 ${label} 已经存在了！无需重复添加。`,
-				})
-				break;
-			}else if(item.value === val){
-				this.$message({
-					type: "error",
-					message: `值 ${val} 已经存在了！无需重复添加。`,
-				})
-				break;
-			}else{
+			if (!list.length) {
 				this.addTag(val, label);
-			}
+			} else {
+				let res = list.some((tag) => {
+					return tag.label === label || tag.value === val;
+				});
+				if (res) {
+					this.$message({
+						type: "error",
+						message: `别名 或 值 已经存在了！无需重复添加。`,
+					});
+				} else {
+					this.addTag(val, label);
+				}
 			}
 		},
 		validateIsSave() {
@@ -247,7 +252,7 @@ export default {
 			let len = this.model.hotList.length;
 			if (len < 5) {
 				this.model.tagInput = "";
-				this.model.hotList.push({value:val,label:label});	
+				this.model.hotList.push({ value: val, label: label });
 			} else {
 				this.model.isFull = true;
 				this.model.tagInput = "最多支持5个，请删除后再添加";
@@ -266,7 +271,7 @@ export default {
 			// });
 		},
 		handleSave() {
-			this.validateDefaultID()
+			this.validateDefaultID();
 			if (this.validateErr) {
 				return;
 			}
@@ -436,6 +441,15 @@ export default {
 
 				&:hover {
 					background: rgba($color: #00adeb, $alpha: 0.3);
+				}
+
+				.label {
+					padding: 4px 6px;
+					background: rgba(0, 173, 235, 0.3);
+					font-size: 12px;
+					border-radius: 4px;
+					margin-right: 2px;
+					line-height: 1.6;
 				}
 			}
 		}

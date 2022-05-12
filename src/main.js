@@ -5,9 +5,9 @@ import Utils from './Utils'
 
 import './style/global.style.scss'
 
-import { Input, Autocomplete, Button, Notification, MessageBox, Icon, Message, Drawer, Switch } from 'element-ui';
+import { Input, Autocomplete, Tooltip, Button, Notification, MessageBox, Icon, Message, Drawer, Switch } from 'element-ui';
 
-let comps = { Input, Autocomplete, Button, Icon, Drawer, Switch };
+let comps = { Input, Autocomplete, Tooltip, Button, Icon, Drawer, Switch };
 Object.entries(comps).forEach(([key, comp]) => {
   Vue.use(comp);
 });

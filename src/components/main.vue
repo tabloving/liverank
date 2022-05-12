@@ -15,26 +15,40 @@
 			<el-autocomplete
 				v-else
 				clearable
+				popper-class="suggest-autocomplement"
 				v-model.trim="keyword"
 				:placeholder="placeholder"
 				:trigger-on-focus="false"
 				:fetch-suggestions="suggest"
 				@keyup.enter.native.prevent="search"
 				@select="search"
-			></el-autocomplete>
+			>
+				<template slot-scope="{ item }">
+					<div class="value">{{ item.value }}</div>
+					<span class="label">{{ item.label }}</span>
+				</template>
+			</el-autocomplete>
 			<div :class="[keyword ? '' : 'disabled', 'button']" @click="search">
 				查询
 			</div>
 		</div>
 		<!-- hot tags -->
 		<div v-if="showHot" class="hotbox">
-			<span
+			<el-tooltip
 				v-for="key in hotList"
-				:class="['hot', key === keyword ? 'active' : '']"
 				:key="key.value"
-				@click="hotSearch(key.value)"
-				>{{ key.label }}</span
+				placement="top"
+				:content="key.value"
 			>
+				<span
+					:class="[
+						'hot',
+						key.label === keyword || key.value === keyword ? 'active' : '',
+					]"
+					@click="hotSearch(key.value)"
+					>{{ key.label }}</span
+				>
+			</el-tooltip>
 		</div>
 		<!-- main info -->
 		<div class="mainInfo">
@@ -165,18 +179,20 @@ export default {
 		open(name) {
 			this.drawerControl([name, "on"]);
 		},
-		suggest(query,cb){
-			let list = this.hotList.map((item)=>{
-				return {'value': item}
-			})
-			const result = query ? list.filter(this.createFilter(query)) : list
-			cb(result)
+		suggest(query, cb) {
+			let list = this.hotList.map((item) => {
+				return { value: item.value, label: item.label };
+			});
+			const result = query ? list.filter(this.createFilter(query)) : list;
+			cb(result);
 		},
 		createFilter(queryString) {
-        return (item) => {
-          return (item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
-        };
-      },
+			return (item) => {
+				return (
+					item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1
+				);
+			};
+		},
 		search() {
 			this.$Utils.clearTimer(this.timer);
 			this.timer = setTimeout(() => {
@@ -196,6 +212,32 @@ export default {
 	},
 };
 </script>
+<style lang="scss">
+.suggest-autocomplement {
+  li[id*="el-autocomplete-"] {
+		line-height: normal;
+		padding: 7px 10px;
+		display: flex !important;
+		flex-flow: row nowrap;
+		align-items: center;
+		justify-content: start;
+		.value {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			margin-right: 6px;
+		}
+		.label {
+			font-size: 12px;
+			color: #b4b4b4;
+			border: 1px solid #ddd;
+			width: auto;
+			padding: 2px 6px;
+			border-radius: 4px;
+			text-align: center;
+		}
+	}
+}
+</style>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
@@ -220,6 +262,7 @@ export default {
 		transform: rotate(360deg);
 	}
 }
+
 
 #container {
 	width: 64%;

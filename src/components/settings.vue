@@ -100,7 +100,10 @@ export default {
 				isFull: false,
 				hotList: [
 					{ value: DEFAULT_ID, label: "洋流" },
-					{ value: "是超可爱吖", label: "可爱" },
+					{ value: "是超可爱吖", label: "可爱姐" },
+					{ value: "哔哩哔哩英雄联盟赛事", label: "LOL职业比赛" },
+					{ value: "lolm烟火", label: "烟火" },
+					{ value: "神探帅硫克", label: "硫克" },
 				],
 				defaultID: DEFAULT_ID,
 			},

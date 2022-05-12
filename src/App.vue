@@ -27,6 +27,9 @@ export default {
   overflow: hidden;
 }
 @media screen and (max-width:640px){
+	#app{
+		overflow: scroll;
+	}
 	.el-message-box{
 		width:90%
 	}

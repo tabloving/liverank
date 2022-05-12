@@ -233,10 +233,12 @@ export default {
 			let hours = Math.floor(leavel / (3600 * 1000)); // 计算剩余的小时数
 			let leavel2 = leavel % (3600 * 1000); // 计算剩余小时后剩余的毫秒数
 			let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
-			let d = days ? `${days} 天` : "";
+			let leavel3 = leavel2 % (60 * 1000); // 计算分钟数后剩余的毫秒数
+			let seconds =  Math.floor(leavel3 / (1000)); 
+			let d = days? `${days} 天` : "";
 			let h = hours ? `${hours} 小时` : "";
-			return `${d} ${h} ${minutes} 分钟`;
-			// return days + '天' + hours + '时' + minutes + '分';
+			let diff = `${d} ${h} ${minutes} 分钟`
+			return diff.trim();
 		},
 	},
 };
@@ -585,7 +587,7 @@ h2 {
 
 	.hot {
 		border: 1px solid #00adeb;
-		margin: 0 6px;
+		margin: 6px;
 		padding: 6px 10px;
 		border-radius: 4px;
 		cursor: pointer;
@@ -604,7 +606,7 @@ h2 {
 		min-width: 90%;
 		padding: 20px 20px 60px;
 
-	::v-deep .search .el-input {
+		::v-deep .search .el-input {
 			width: 100%;
 			font-size: 14px;
 		}

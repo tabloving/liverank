@@ -71,7 +71,7 @@
 					<span class="cate">{{ liveInfo.cate }}</span>
 				</div>
 
-					<div class="info-card">
+				<div class="info-card">
 					<div class="card userbox uname">
 						<span class="label">UP</span>
 						<span class="maincon" v-html="liveInfo.uname"></span>
@@ -84,9 +84,7 @@
 						<span class="label">粉丝数</span>
 						<span class="maincon">{{ liveInfo.fans }}</span>
 					</div>
-			
 
-				
 					<div class="card roombox rid">
 						<span class="label">房间ID</span>
 						<span class="maincon">{{ liveInfo.roomid }}</span>
@@ -99,19 +97,18 @@
 						<span class="label">看过</span>
 						<span class="maincon">{{ liveInfo.watched }}</span>
 					</div>
-			
 
-				<div class="livetime" v-if="liveInfo.status">
-					<div class="card timebox starttime">
-						<span class="label">开始直播</span>
-						<span class="maincon">{{ liveInfo.live_time }}</span>
-					</div>
+					<div class="livetime" v-if="liveInfo.status">
+						<div class="card timebox starttime">
+							<span class="label">开始直播</span>
+							<span class="maincon">{{ liveInfo.live_time }}</span>
+						</div>
 
-					<div class="card timebox liveduring">
-						<span class="label">直播时长</span>
-						<span class="maincon">{{ liveduring }}</span>
+						<div class="card timebox liveduring">
+							<span class="label">直播时长</span>
+							<span class="maincon">{{ liveduring }}</span>
+						</div>
 					</div>
-				</div>	
 				</div>
 			</div>
 		</div>
@@ -186,9 +183,9 @@ export default {
 	computed: {
 		...mapState(["liveInfo", "resData", "updatemsg", "settings"]),
 		...mapGetters(["liveMsg", "toRoom", "liveTitle"]),
-		liveduring(){
-			return this.calcLiveDuring(this.liveInfo['live_time'])
-		}
+		liveduring() {
+			return this.calcLiveDuring(this.liveInfo["live_time"]);
+		},
 	},
 	methods: {
 		...mapMutations(["drawerControl"]),
@@ -227,21 +224,20 @@ export default {
 			this.showHot = key;
 			this.hotList = list;
 		},
-		calcLiveDuring (date) {
-    let startTime = new Date(date); // 开始时间
-    let endTime = Date.now(); // 结束时间
-    let usedTime = endTime - startTime; // 相差的毫秒数
-    let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数
-    let leavel = usedTime % (24 * 3600 * 1000); // 计算天数后剩余的时间
-    let hours = Math.floor(leavel / (3600 * 1000)); // 计算剩余的小时数
-    let leavel2 = leavel % (3600 * 1000); // 计算剩余小时后剩余的毫秒数
-    let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
-		let d = days ? `${days} 天`: ''
-		let h = hours ? `${hours} 小时` : ''
-		return `${d} ${h} ${minutes} 分钟`
-    // return days + '天' + hours + '时' + minutes + '分';
-}
-
+		calcLiveDuring(date) {
+			let startTime = new Date(date); // 开始时间
+			let endTime = Date.now(); // 结束时间
+			let usedTime = endTime - startTime; // 相差的毫秒数
+			let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数
+			let leavel = usedTime % (24 * 3600 * 1000); // 计算天数后剩余的时间
+			let hours = Math.floor(leavel / (3600 * 1000)); // 计算剩余的小时数
+			let leavel2 = leavel % (3600 * 1000); // 计算剩余小时后剩余的毫秒数
+			let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
+			let d = days ? `${days} 天` : "";
+			let h = hours ? `${hours} 小时` : "";
+			return `${d} ${h} ${minutes} 分钟`;
+			// return days + '天' + hours + '时' + minutes + '分';
+		},
 	},
 };
 </script>
@@ -494,74 +490,73 @@ h2 {
 	top: -1px;
 }
 
-.info-card{
+.info-card {
 	display: flex;
 	flex-flow: row wrap;
 	align-content: center;
 
-	.livetime{
+	.livetime {
 		display: flex;
 		flex-flow: row wrap;
 	}
 
-	.card{
-	height: 30px;
-	line-height: 30px;
-	font-size: 14px;
-	margin:6px;
+	.card {
+		height: 30px;
+		line-height: 30px;
+		font-size: 14px;
+		margin: 6px;
 	}
 
 	.userbox {
-	border: 1px solid #5c968e;
-	display: flex;
-}
+		border: 1px solid #5c968e;
+		display: flex;
+	}
 
-.roombox {
-	border: 1px solid #8d7ca6;
-}
+	.roombox {
+		border: 1px solid #8d7ca6;
+	}
 
-.timebox{
-	border: 1px solid #fb8bab;
-}
+	.timebox {
+		border: 1px solid #fb8bab;
+	}
 
-.label {
-	width: 60px;
-	display: inline-block;
-	color: white;
-}
+	.label {
+		width: 60px;
+		display: inline-block;
+		color: white;
+	}
 
-.maincon {
-	width: 100px;
-	display: inline-block;
-	@include themed() {
-		color: t("text-color");
+	.maincon {
+		width: 100px;
+		display: inline-block;
+		@include themed() {
+			color: t("text-color");
+		}
+	}
+
+	.uname .maincon {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.timebox .maincon {
+		width: 168px;
+	}
+
+	.userbox .label {
+		background-color: #5c968e;
+	}
+
+	.roombox .label {
+		background-color: #8d7ca6;
+	}
+
+	.timebox .label {
+		background-color: #fb8bab;
+		width: 80px;
 	}
 }
-
-.uname .maincon {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.timebox .maincon{
-	width: 168px
-}
-
-.userbox .label {
-	background-color: #5c968e;
-}
-
-.roombox .label {
-	background-color: #8d7ca6;
-}
-
-.timebox .label{
-	background-color: #fb8bab;
-	width: 80px
-}
-}
-
 
 .openMsg {
 	position: absolute;
@@ -604,32 +599,33 @@ h2 {
 }
 
 @media screen and (max-width: 640px) {
-	#container{
+	#container {
 		width: 94%;
 		min-width: 90%;
 		padding: 20px 20px 60px;
 
-		.search .el-input{
+	::v-deep .search .el-input {
 			width: 100%;
-			font-size: 14px
+			font-size: 14px;
 		}
-
-		.mainInfo{
+		.search .el-autocomplete {
+			width: 100%;
+		}
+		.mainInfo {
 			flex-flow: column wrap;
 			align-items: center;
 			justify-content: center;
 
-			.livedata{
+			.livedata {
 				width: 100%;
 				margin-top: 20px;
 				flex-flow: column wrap;
 				align-items: center;
 				justify-content: center;
 
-				.livetit{
+				.livetit {
 					margin-bottom: 16px;
 				}
-
 			}
 		}
 	}

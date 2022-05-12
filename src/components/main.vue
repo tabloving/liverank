@@ -189,7 +189,8 @@ export default {
 		createFilter(queryString) {
 			return (item) => {
 				return (
-					item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1
+					item.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1 ||
+					item.label.toLowerCase().indexOf(queryString.toLowerCase()) !== -1
 				);
 			};
 		},
@@ -214,7 +215,7 @@ export default {
 </script>
 <style lang="scss">
 .suggest-autocomplement {
-  li[id*="el-autocomplete-"] {
+	li[id*="el-autocomplete-"] {
 		line-height: normal;
 		padding: 7px 10px;
 		display: flex !important;
@@ -262,7 +263,6 @@ export default {
 		transform: rotate(360deg);
 	}
 }
-
 
 #container {
 	width: 64%;

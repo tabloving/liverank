@@ -70,34 +70,48 @@
 					></a>
 					<span class="cate">{{ liveInfo.cate }}</span>
 				</div>
-				<div class="user">
-					<div class="userbox uname">
+
+					<div class="info-card">
+					<div class="card userbox uname">
 						<span class="label">UP</span>
 						<span class="maincon" v-html="liveInfo.uname"></span>
 					</div>
-					<div class="userbox uid">
+					<div class="card userbox uid">
 						<span class="label">UID</span>
 						<span class="maincon">{{ liveInfo.uid }}</span>
 					</div>
-					<div class="userbox att">
+					<div class="card userbox att">
 						<span class="label">粉丝数</span>
 						<span class="maincon">{{ liveInfo.fans }}</span>
 					</div>
-				</div>
+			
 
-				<div class="room">
-					<div class="roombox rid">
+				
+					<div class="card roombox rid">
 						<span class="label">房间ID</span>
 						<span class="maincon">{{ liveInfo.roomid }}</span>
 					</div>
-					<div class="roombox online">
+					<div class="card roombox online">
 						<span class="label">人气</span>
 						<span class="maincon">{{ liveInfo.online }}</span>
 					</div>
-					<div class="roombox watched">
+					<div class="card roombox watched">
 						<span class="label">看过</span>
 						<span class="maincon">{{ liveInfo.watched }}</span>
 					</div>
+			
+
+				<div class="livetime" v-if="liveInfo.status">
+					<div class="card timebox starttime">
+						<span class="label">开始直播</span>
+						<span class="maincon">{{ liveInfo.live_time }}</span>
+					</div>
+
+					<div class="card timebox liveduring">
+						<span class="label">直播时长</span>
+						<span class="maincon">{{ liveduring }}</span>
+					</div>
+				</div>	
 				</div>
 			</div>
 		</div>
@@ -172,6 +186,9 @@ export default {
 	computed: {
 		...mapState(["liveInfo", "resData", "updatemsg", "settings"]),
 		...mapGetters(["liveMsg", "toRoom", "liveTitle"]),
+		liveduring(){
+			return this.calcLiveDuring(this.liveInfo['live_time'])
+		}
 	},
 	methods: {
 		...mapMutations(["drawerControl"]),
@@ -210,6 +227,21 @@ export default {
 			this.showHot = key;
 			this.hotList = list;
 		},
+		calcLiveDuring (date) {
+    let startTime = new Date(date); // 开始时间
+    let endTime = Date.now(); // 结束时间
+    let usedTime = endTime - startTime; // 相差的毫秒数
+    let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数
+    let leavel = usedTime % (24 * 3600 * 1000); // 计算天数后剩余的时间
+    let hours = Math.floor(leavel / (3600 * 1000)); // 计算剩余的小时数
+    let leavel2 = leavel % (3600 * 1000); // 计算剩余小时后剩余的毫秒数
+    let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
+		let d = days ? `${days} 天`: ''
+		let h = hours ? `${hours} 小时` : ''
+		return `${d} ${h} ${minutes} 分钟`
+    // return days + '天' + hours + '时' + minutes + '分';
+}
+
 	},
 };
 </script>
@@ -265,7 +297,7 @@ export default {
 }
 
 #container {
-	width: 64%;
+	width: 60%;
 	min-width: 800px;
 	box-sizing: border-box;
 	// border: 1px solid red;
@@ -357,7 +389,7 @@ h2 {
 	display: flex;
 	flex-flow: row nowrap;
 	justify-content: center;
-	align-content: center;
+	align-items: center;
 	margin-top: 30px;
 }
 
@@ -375,6 +407,7 @@ h2 {
 	background-position: center center;
 	margin-top: 20px;
 	border: 4px solid gray;
+	margin-right: 8px;
 }
 
 .uface.live {
@@ -422,8 +455,9 @@ h2 {
 .livedata {
 	display: flex;
 	flex-flow: column wrap;
-	width: 74%;
+	width: 78%;
 	align-items: center;
+	overflow: hidden;
 }
 
 .livetit {
@@ -460,27 +494,34 @@ h2 {
 	top: -1px;
 }
 
-.user,
-.room {
+.info-card{
 	display: flex;
-	flex-flow: row nowrap;
+	flex-flow: row wrap;
 	align-content: center;
+
+	.livetime{
+		display: flex;
+		flex-flow: row wrap;
+	}
+
+	.card{
 	height: 30px;
 	line-height: 30px;
 	font-size: 14px;
-	margin-top: 8px;
-}
+	margin:6px;
+	}
 
-.userbox {
+	.userbox {
 	border: 1px solid #5c968e;
-	margin: 0 6px;
 	display: flex;
 }
 
 .roombox {
 	border: 1px solid #8d7ca6;
-	margin: 0 6px;
-	display: flex;
+}
+
+.timebox{
+	border: 1px solid #fb8bab;
 }
 
 .label {
@@ -503,6 +544,10 @@ h2 {
 	white-space: nowrap;
 }
 
+.timebox .maincon{
+	width: 168px
+}
+
 .userbox .label {
 	background-color: #5c968e;
 }
@@ -510,6 +555,13 @@ h2 {
 .roombox .label {
 	background-color: #8d7ca6;
 }
+
+.timebox .label{
+	background-color: #fb8bab;
+	width: 80px
+}
+}
+
 
 .openMsg {
 	position: absolute;
@@ -547,6 +599,38 @@ h2 {
 		&:hover,
 		&.active {
 			background: rgba($color: #00adeb, $alpha: 0.3);
+		}
+	}
+}
+
+@media screen and (max-width: 640px) {
+	#container{
+		width: 94%;
+		min-width: 90%;
+		padding: 20px 20px 60px;
+
+		.search .el-input{
+			width: 100%;
+			font-size: 14px
+		}
+
+		.mainInfo{
+			flex-flow: column wrap;
+			align-items: center;
+			justify-content: center;
+
+			.livedata{
+				width: 100%;
+				margin-top: 20px;
+				flex-flow: column wrap;
+				align-items: center;
+				justify-content: center;
+
+				.livetit{
+					margin-bottom: 16px;
+				}
+
+			}
 		}
 	}
 }

@@ -26,4 +26,9 @@ export default {
   height: 100vh;
   overflow: hidden;
 }
+@media screen and (max-width:640px){
+	.el-message-box{
+		width:90%
+	}
+}
 </style>

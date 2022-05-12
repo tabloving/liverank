@@ -31,6 +31,7 @@ export default new Vuex.Store({
       roomid: 0,
       online: 0,
       watched: 0,
+      live_time: 0
     },
     updatemsg: false,
     settings: false
@@ -94,6 +95,7 @@ export default new Vuex.Store({
               roomid: info['roomid'],
               online: info['online'] || 0,
               watched: info["watched_show"] ? info["watched_show"]['num'] : 0,
+              live_time: info['live_time']
             }
           } else {
             state.resData = 0

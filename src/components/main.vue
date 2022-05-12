@@ -31,9 +31,9 @@
 			<span
 				v-for="key in hotList"
 				:class="['hot', key === keyword ? 'active' : '']"
-				:key="key"
-				@click="hotSearch(key)"
-				>{{ key }}</span
+				:key="key.value"
+				@click="hotSearch(key.value)"
+				>{{ key.label }}</span
 			>
 		</div>
 		<!-- main info -->

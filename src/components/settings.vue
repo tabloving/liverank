@@ -21,7 +21,7 @@
 				:placeholder="item.placeholder"
 				:disabled="model[item.disabledKey]"
 				:ref="item.refName"
-				@change="validate(item['validateMethod'])"
+				@keyup.enter.native="validate(item['validateMethod'])"
 				show-word-limit
 				autofocus
 				clearable
@@ -41,13 +41,15 @@
 			</transition>
 			<!-- 快捷标签 -->
 			<div class="hottags" v-if="item.tags && model.hotList.length">
-				<span class="tag" v-for="(tag, index) in model[item.list]" :key="tag"
-					>{{ tag }}
+				<span class="tag" v-for="(tag, index) in model[item.list]" :key="tag.value"
+					>{{ tag.value }}
 					<i class="el-icon-circle-close" @click="deleteTag(index)"></i
 				></span>
 			</div>
-			<p class="tagmessage" v-if="item.tags && !model.hotList.length">您还没有添加任何快捷标签！</p>
-			
+			<p class="tagmessage" v-if="item.tags && !model.hotList.length">
+				您还没有添加任何快捷标签！
+			</p>
+
 			<p v-if="item.des" class="des">{{ item.des }}</p>
 		</section>
 
@@ -64,9 +66,9 @@
 <script>
 import Storage from "../storage";
 import { mapMutations } from "vuex";
-import { stringify } from "qs";
 const STORE_DAYS = 20;
 const DEFAULT_ID = "变质的洋流";
+const REG = /^(.+)[:：/](.+)$/;
 function getLocal(name) {
 	return Storage.get(name);
 }
@@ -86,7 +88,10 @@ export default {
 				showHot: true,
 				tagInput: "",
 				isFull: false,
-				hotList: [DEFAULT_ID, "是超可爱吖","lolm烟火"],
+				hotList: [
+					{ value: DEFAULT_ID, label: DEFAULT_ID },
+					{ value: "是超可爱吖", label: "是超可爱吖" },
+				],
 				defaultID: DEFAULT_ID,
 			},
 			list: [
@@ -120,11 +125,11 @@ export default {
 					title: "快捷标签设置",
 					type: "input",
 					model: "tagInput",
-					disabledKey: 'isFull',
+					disabledKey: "isFull",
 					refName: "addTag",
 					tags: true,
 					list: "hotList",
-					placeholder: '请输入标签，按回车确认',
+					placeholder: "请输入标签，按回车确认",
 					validateMethod: "validateHotTag",
 				},
 			],
@@ -172,14 +177,27 @@ export default {
 			}
 		},
 		validateHotTag() {
-			let val = this.$refs.addTag[0].value;
-			if (this.model.hotList.indexOf(val) !== -1) {
+			let str = this.$refs.addTag[0].value;
+			let val = REG.exec(str) ? REG.exec(str)[2] : str;
+			let label = REG.exec(str) ? REG.exec(str)[1] : str;
+			let list = JSON.parse(JSON.stringify(this.model.hotList))
+
+			for(let item of list){
+				if(item.label === label){
+					this.$message({
+					type: "error",
+					message: `别名 ${label} 已经存在了！无需重复添加。`,
+				})
+				break;
+			}else if(item.value === val){
 				this.$message({
 					type: "error",
-					message: `${val} 已经存在了！无需重复添加。`,
-				});
-			} else {
-				this.addTag(val);
+					message: `值 ${val} 已经存在了！无需重复添加。`,
+				})
+				break;
+			}else{
+				this.addTag(val, label);
+			}
 			}
 		},
 		validateIsSave() {
@@ -206,7 +224,7 @@ export default {
 							this.model[i] = getLocal(i);
 						}
 						this.validateErr = false;
-						
+
 						this.drawerControl(["settings", "off"]);
 						this.$message({
 							message: "您取消了设置",
@@ -225,14 +243,14 @@ export default {
 				window.document.documentElement.setAttribute("data-theme", "light");
 			}
 		},
-		addTag(tag) {
+		addTag(val, label) {
 			let len = this.model.hotList.length;
 			if (len < 5) {
-				this.model.hotList.push(tag);
 				this.model.tagInput = "";
+				this.model.hotList.push({value:val,label:label});	
 			} else {
-				this.model.isFull = true
-				this.model.tagInput = '最多支持5个，请删除后再添加'
+				this.model.isFull = true;
+				this.model.tagInput = "最多支持5个，请删除后再添加";
 				this.$message({
 					type: "error",
 					message: "最多支持5个快捷标签！",
@@ -241,13 +259,14 @@ export default {
 		},
 		deleteTag(index) {
 			this.model.hotList.splice(index, 1);
-			this.model.isFull = false
-			this.model.tagInput = ''
-			this.$nextTick(()=>{
-				this.$refs.addTag[0].focus()
-			})
+			this.model.isFull = false;
+			this.model.tagInput = "";
+			// this.$nextTick(() => {
+			// 	this.$refs.addTag[0].focus();
+			// });
 		},
 		handleSave() {
+			this.validateDefaultID()
 			if (this.validateErr) {
 				return;
 			}

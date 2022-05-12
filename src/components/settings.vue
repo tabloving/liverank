@@ -15,7 +15,7 @@
 			</p>
 			<el-input
 				v-if="item.type === 'input'"
-				maxlength="10"
+				:maxlength="item.maxlength"
 				v-model.trim="model[item.model]"
 				:class="[item.validate && validateErr ? 'err' : '']"
 				:placeholder="item.placeholder"
@@ -39,6 +39,8 @@
 					{{ item.validatemsg }}
 				</p>
 			</transition>
+			<!-- 描述 -->
+			<p v-if="item.des" class="des">{{ item.des }}</p>
 			<!-- 快捷标签 -->
 			<div class="hottags" v-if="item.tags && model.hotList.length">
 				<span
@@ -53,11 +55,12 @@
 					<i class="el-icon-circle-close" @click="deleteTag(index)"></i
 				></span>
 			</div>
-			<p class="tagmessage" v-if="item.tags && !model.hotList.length">
+			<!-- <p class="tagmessage" v-if="item.tags && !model.hotList.length">
 				您还没有添加任何快捷标签！
-			</p>
+			</p> -->
+			<el-empty class="tagmessage" :image-size="80" v-if="item.tags && !model.hotList.length" description="您还没有添加任何快捷标签！"></el-empty>
 
-			<p v-if="item.des" class="des">{{ item.des }}</p>
+			
 		</section>
 
 		<el-button
@@ -108,6 +111,7 @@ export default {
 					des: `📢 数据存储在本地${STORE_DAYS}天，清缓存会同时清除数据，望周知！`,
 					placeholder: "请输入您需要设置的值",
 					validate: true,
+					maxlength: 10,
 					validatemsg: "输入不能为空。若想保持不变，请开启锁定",
 					validateMethod: "validateDefaultID",
 					model: "defaultID",
@@ -132,12 +136,14 @@ export default {
 					title: "快捷标签设置",
 					type: "input",
 					model: "tagInput",
+					maxlength: 12,
 					disabledKey: "isFull",
 					refName: "addTag",
 					tags: true,
 					list: "hotList",
 					placeholder: "请输入标签，按回车确认",
 					validateMethod: "validateHotTag",
+					des: '提示：使用冒号或者 / 可以设置别名，例如：lol：英雄联盟'
 				},
 			],
 		};
@@ -249,6 +255,7 @@ export default {
 			}
 		},
 		addTag(val, label) {
+			if(!this.model.tagInput) return;
 			let len = this.model.hotList.length;
 			if (len < 5) {
 				this.model.tagInput = "";
@@ -346,6 +353,15 @@ export default {
 				}
 			},
 		},
+		"model.defaultID":{
+			handler(){
+				if(!this.model.isLock && !this.model.defaultID){
+					this.validateErr = true;
+				}else{
+					this.validateErr = false;
+				}
+			}
+		}
 	},
 };
 </script>
@@ -420,8 +436,9 @@ export default {
 		}
 
 		.tagmessage {
-			text-align: center;
-			margin-top: 6px;
+			// text-align: center;
+			// margin-top: 6px;
+			padding: 20px 0;
 		}
 
 		.hottags {

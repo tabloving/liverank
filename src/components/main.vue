@@ -225,7 +225,8 @@ export default {
 			this.hotList = list;
 		},
 		calcLiveDuring(date) {
-			let startTime = new Date(date); // 开始时间
+			date = date.replace(/-/g, '/') // 兼容IOS上显示 NaN
+			let startTime = new Date(date).getTime(); // 开始时间
 			let endTime = Date.now(); // 结束时间
 			let usedTime = endTime - startTime; // 相差的毫秒数
 			let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数

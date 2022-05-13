@@ -51,7 +51,9 @@
 					<span class="label">
 						{{ tag.label }}
 					</span>
-					{{ tag.value }}
+					<span class="value">
+							{{ tag.value }}
+					</span>
 					<i class="el-icon-circle-close" @click="deleteTag(index)"></i
 				></span>
 			</div>
@@ -139,7 +141,7 @@ export default {
 					title: "快捷标签设置",
 					type: "input",
 					model: "tagInput",
-					maxlength: 12,
+					maxlength: 15,
 					disabledKey: "isFull",
 					refName: "addTag",
 					tags: true,
@@ -276,9 +278,9 @@ export default {
 			this.model.hotList.splice(index, 1);
 			this.model.isFull = false;
 			this.model.tagInput = "";
-			// this.$nextTick(() => {
-			// 	this.$refs.addTag[0].focus();
-			// });
+			this.$nextTick(() => {
+				this.$refs.addTag[0].focus();
+			});
 		},
 		handleSave() {
 			this.validateDefaultID();
@@ -458,9 +460,18 @@ export default {
 				border-radius: 4px;
 				cursor: pointer;
 				transition: 0.3s linear;
+				word-break: break-word;
+				display: flex;
+				flex-flow: row nowrap;
+				justify-content: space-between;
+				align-content: center;
 
 				&:hover {
 					background: rgba($color: #00adeb, $alpha: 0.3);
+
+					.label{
+						background:rgba(#fff,0.8);
+					}
 				}
 
 				.label {
@@ -468,8 +479,20 @@ export default {
 					background: rgba(0, 173, 235, 0.3);
 					font-size: 12px;
 					border-radius: 4px;
-					margin-right: 2px;
-					line-height: 1.6;
+					margin-right: 4px;
+				
+				}
+				.label,
+				.value,
+				.el-icon-circle-close{
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+
+				.value{
+					margin-right: 6px;
+					flex:2
 				}
 			}
 		}

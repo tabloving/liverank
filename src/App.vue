@@ -23,12 +23,13 @@ export default {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
-  height: 100vh;
-  overflow: hidden;
+  // height: 100vh;
+	// overflow: scroll;
+	padding-bottom: 30px;
 }
 @media screen and (max-width:640px){
 	#app{
-		overflow: scroll;
+		padding-bottom: 0;
 	}
 	.el-message-box{
 		width:90%

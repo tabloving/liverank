@@ -210,6 +210,11 @@ export default {
 		},
 		search() {
 			this.$Utils.clearTimer(this.timer);
+			let activedTag = this.hotList.find((tag)=>{
+				return this.keyword === tag.label
+			})
+			console.log(activedTag)
+			this.keyword = (activedTag && activedTag.value) ?? this.keyword
 			this.timer = setTimeout(() => {
 				this.key = this.keyword;
 				this.$store.commit("getData", this);
@@ -297,10 +302,10 @@ export default {
 
 #container {
 	width: 60%;
-	min-width: 800px;
+	min-width: 750px;
+	max-width: 70%;
 	box-sizing: border-box;
-	// border: 1px solid red;
-	margin: 60px auto 0;
+	margin: 60px auto 0px;
 	padding: 40px 60px 80px;
 	position: relative;
 	border-radius: 10px;
@@ -335,7 +340,8 @@ h2 {
 }
 
 .search {
-	margin-top: 30px;
+	max-width: 500px;
+	margin: 30px auto 0;
 	height: 46px;
 	text-align: center;
 	display: flex;
@@ -497,6 +503,7 @@ h2 {
 	display: flex;
 	flex-flow: row wrap;
 	align-content: center;
+	justify-content: center;
 
 	.livetime {
 		display: flex;
@@ -603,9 +610,11 @@ h2 {
 
 @media screen and (max-width: 640px) {
 	#container {
-		width: 94%;
+		width: 96%;
 		min-width: 90%;
+		max-width: 98%;
 		padding: 20px 20px 60px;
+		margin: 20px auto;
 
 		::v-deep .search .el-input {
 			width: 100%;

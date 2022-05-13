@@ -170,6 +170,7 @@ export default {
 			transform: rotate(-2deg);
 			margin-top: 20px;
 			margin-bottom: 30px;
+			transform-origin: top right;
 
 			&:hover {
 				animation: NoticeShake 1s ease-in-out 10 alternate;

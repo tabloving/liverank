@@ -35,8 +35,7 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
-	// height: 100vh;
-	// overflow: scroll;
+	overflow: auto;
 	padding-bottom: 30px;
 }
 @media screen and (max-width: 640px) {

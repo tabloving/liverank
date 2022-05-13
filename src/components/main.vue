@@ -144,7 +144,6 @@ export default {
 	},
 	created() {
 		this.$store.commit("getData", this);
-		// this.showHot = Storage.get("shwoHot");
 		this.$nextTick(() => {
 			if (this.$refs.settings.model.refresh) {
 				this.doSearch(this);
@@ -460,7 +459,6 @@ h2 {
 .livedata {
 	display: flex;
 	flex-flow: column wrap;
-	width: 78%;
 	align-items: center;
 	overflow: hidden;
 }
@@ -515,11 +513,13 @@ h2 {
 		line-height: 30px;
 		font-size: 14px;
 		margin: 6px;
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		align-items: center;
 	}
-
 	.userbox {
 		border: 1px solid #5c968e;
-		display: flex;
 	}
 
 	.roombox {
@@ -532,7 +532,6 @@ h2 {
 
 	.label {
 		width: 60px;
-		display: inline-block;
 		color: white;
 	}
 

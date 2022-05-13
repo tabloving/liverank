@@ -90,6 +90,7 @@ function setLocal(name, value) {
 export default {
 	name: "Settings",
 	props: ["flag", "changeHot"],
+	inject: ["VERSION"],
 	data() {
 		return {
 			validateErr: false,
@@ -103,7 +104,7 @@ export default {
 				hotList: [
 					{ value: DEFAULT_ID, label: "洋流" },
 					{ value: "是超可爱吖", label: "可爱姐" },
-					{ value: "哔哩哔哩英雄联盟赛事", label: "LOL职业比赛" },
+					{ value: "哔哩哔哩英雄联盟赛事", label: "LOL赛事" },
 					{ value: "lolm烟火", label: "烟火" },
 					{ value: "神探帅硫克", label: "硫克" },
 				],
@@ -163,11 +164,17 @@ export default {
 			"hotList",
 		];
 
+		let V = getLocal('VERSION')
+		V !== this.VERSION && localStorage.clear()
+		V !== this.VERSION && setLocal('VERSION',this.VERSION)
+
 		for (let i of local) {
 			getLocal(i) === undefined
 				? setLocal(i, this.model[i])
 				: (this.model[i] = getLocal(i));
 		}
+
+
 
 		this.$emit("changeHot", {
 			key: getLocal("showHot"),

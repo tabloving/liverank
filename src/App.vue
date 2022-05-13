@@ -8,6 +8,16 @@
 import mainVue from "./components/main.vue";
 export default {
 	name: "App",
+	provide(){
+		return {
+			VERSION: this.VERSION
+		}
+	},
+	data(){
+		return {
+			VERSION: 3.0
+		}
+	},
 	components: {
 		mainVue,
 	},

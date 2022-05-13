@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-			<main-vue></main-vue>
+		<main-vue></main-vue>
 	</div>
 </template>
 
@@ -8,15 +8,15 @@
 import mainVue from "./components/main.vue";
 export default {
 	name: "App",
-	provide(){
+	provide() {
 		return {
-			VERSION: this.VERSION
-		}
+			VERSION: this.VERSION,
+		};
 	},
-	data(){
+	data() {
 		return {
-			VERSION: 3.0
-		}
+			VERSION: 2.0,
+		};
 	},
 	components: {
 		mainVue,
@@ -25,24 +25,26 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
+body {
 	@include themed() {
-    background: t('background-color');
-  };
+		background: t("background-color");
+	}
+}
+#app {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
-  // height: 100vh;
+	// height: 100vh;
 	// overflow: scroll;
 	padding-bottom: 30px;
 }
-@media screen and (max-width:640px){
-	#app{
+@media screen and (max-width: 640px) {
+	#app {
 		padding-bottom: 0;
 	}
-	.el-message-box{
-		width:90%
+	.el-message-box {
+		width: 90%;
 	}
 }
 </style>

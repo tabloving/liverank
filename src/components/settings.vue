@@ -57,9 +57,7 @@
 					<i class="el-icon-circle-close" @click="deleteTag(index)"></i
 				></span>
 			</div>
-			<!-- <p class="tagmessage" v-if="item.tags && !model.hotList.length">
-				您还没有添加任何快捷标签！
-			</p> -->
+			<!-- empty placehodler -->
 			<el-empty class="tagmessage" :image-size="80" v-if="item.tags && !model.hotList.length" description="您还没有添加任何快捷标签！"></el-empty>
 
 			
@@ -129,7 +127,7 @@ export default {
 				{
 					title: "自动刷新数据",
 					type: "switch",
-					des: "开启后，将会每20s自动刷新一次数据，建议开启",
+					des: "开启后，将会每20s自动刷新一次数据，建议开启。V2.x版本已锁定开启。",
 					model: "refresh",
 					disabled: true,
 				},
@@ -173,8 +171,6 @@ export default {
 				? setLocal(i, this.model[i])
 				: (this.model[i] = getLocal(i));
 		}
-
-
 
 		this.$emit("changeHot", {
 			key: getLocal("showHot"),
@@ -239,8 +235,8 @@ export default {
 			});
 			if (!res) {
 				this.$confirm(
-					"你有未保存的数据，是否丢弃数据继续关闭？",
-					"检测到未保存数据"
+					"你有未保存的数据，关闭后将放弃本次修改，是否继续关闭？",
+					"检测到有未保存的数据"
 				)
 					.then((_) => {
 						for (let i of target) {

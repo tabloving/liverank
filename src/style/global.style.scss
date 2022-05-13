@@ -64,7 +64,10 @@ section {
   #el-drawer__title {
       font-size: 24px;
       font-weight: bold;
+      padding: 20px;
+      margin-bottom: 0;
       color: #00adeb;
+      border-bottom: 1px solid rgba(#00adeb,0.1);
     }
   }
 

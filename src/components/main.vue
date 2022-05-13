@@ -208,16 +208,15 @@ export default {
 			};
 		},
 		search() {
-			this.$Utils.clearTimer(this.timer);
+			this.timer = this.$Utils.clearTimer(this.timer);
 			let activedTag = this.hotList.find((tag)=>{
 				return this.keyword === tag.label
 			})
-			console.log(activedTag)
 			this.keyword = (activedTag && activedTag.value) ?? this.keyword
 			this.timer = setTimeout(() => {
 				this.key = this.keyword;
 				this.$store.commit("getData", this);
-				this.$Utils.clearTimer(this.timer);
+				this.timer = this.$Utils.clearTimer(this.timer);
 			}, 300);
 		},
 		hotSearch(key) {
@@ -300,9 +299,9 @@ export default {
 }
 
 #container {
-	width: 60%;
+	width: 56%;
 	min-width: 750px;
-	max-width: 70%;
+	max-width: 800px;
 	box-sizing: border-box;
 	margin: 60px auto 0px;
 	padding: 40px 60px 80px;

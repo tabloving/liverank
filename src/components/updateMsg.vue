@@ -5,12 +5,35 @@
 		direction="rtl"
 		:before-close="close"
 	>
-		<div class="section" :key="item.date" v-for="item in list">
-			<div class="title">{{ item.date }} 更新清单</div>
-			<div class="des">{{ item.des }} 主要内容为：</div>
-			<ul v-for="(detail, index) in item.main" :key="detail">
-				<li>{{ index + 1 }}. {{ detail }}</li>
-			</ul>
+		<div class="section notice" v-if="notice.show">
+			<span class="pin">📌</span>
+			<span class="watermark">{{ notice.watermark }}</span>
+			<div class="title">{{ notice.title }}</div>
+			<div class="content">{{ notice.content }}</div>
+			<div class="sign">{{ notice.sign }}</div>
+		</div>
+
+		<el-timeline>
+			<el-timeline-item
+				:timestamp="item.date"
+				type="success"
+				icon="el-icon-circle-check"
+				placement="top"
+				:key="item.date"
+				v-for="item in list"
+			>
+				<div class="section">
+					<div class="title">{{ item.date }} 更新清单</div>
+					<div class="des">{{ item.des }} 主要内容为：</div>
+					<ul v-for="(detail, index) in item.main" :key="detail">
+						<li>{{ index + 1 }}. {{ detail }}</li>
+					</ul>
+				</div>
+			</el-timeline-item>
+		</el-timeline>
+
+		<div class="bottom-line">
+			<div class="bottom-text">已经到底啦~</div>
 		</div>
 	</el-drawer>
 </template>
@@ -21,9 +44,17 @@ export default {
 	props: ["flag"],
 	data() {
 		return {
+			notice: {
+				show: true,
+				title: "诸公敬启",
+				content:
+					"本工具自上线迄今，陆续增添些许功能。主要目的：1）为了可视化查询B站取消的人气显示；2）个人学习练习。其功能纯粹、操作便当、界面整洁。承蒙多位朋友的使用、建议、反馈，才逐步完善。方今基本功能已经齐备，后续将只对现有内容进行常规维护，不再新增模块。再次感谢诸位的参与和喜欢，谢谢！再会~",
+				sign: "2022-5-13 变质的洋流",
+				watermark: "Bye",
+			},
 			list: [
 				{
-					date: "2022.5.12",
+					date: "2022.5.13",
 					des: "快捷搜索功能完善与优化，完成移动端适配。",
 					main: [
 						"新增直播时间显示",
@@ -41,17 +72,16 @@ export default {
 						"自定义快捷开关",
 						"自定义快捷搜索关键字",
 						"修复部分按钮不起作用的问题",
-						"其它问题修正，样式优化"
+						"其它问题修正，样式优化",
 					],
 				},
 				{
 					date: "2022.5.8",
-					des: "功能迁移，修复BUG。",
+					des: "版本2.0发布。功能迁移，修复BUG。",
 					main: [
 						"设置界面全新优化",
 						"新增夜间模式开关",
 						"修复自动更新数据引起的频闪问题",
-						"待更新：自动刷新数据开关"
 					],
 				},
 				{
@@ -107,6 +137,22 @@ export default {
 <style scoped lang="scss">
 ::v-deep .el-drawer.rtl {
 	// overflow-x: visible;
+	.el-timeline-item {
+		.el-timeline-item__tail {
+			left: 10px;
+		}
+		.el-timeline-item__node {
+			left: 5px;
+		}
+		.el-timeline-item__wrapper {
+			padding: 0;
+			.el-timeline-item__timestamp {
+				text-align: left;
+				text-indent: 2em;
+			}
+		}
+	}
+
 	.section {
 		width: 86%;
 		border: 1px solid #f2f2f2;
@@ -114,9 +160,75 @@ export default {
 		padding: 14px 18px;
 		text-align: left;
 		font-size: 16px;
-		margin: 20px 7%;
+		margin: 0px 7%;
 		box-shadow: 4px 4px 14px #ddd;
 		color: #666;
+		user-select: none;
+
+		&.notice {
+			position: relative;
+			transform: rotate(-2deg);
+			margin-top: 20px;
+			margin-bottom: 30px;
+
+			&:hover {
+				animation: NoticeShake 1s ease-in-out 10 alternate;
+			}
+
+			@keyframes NoticeShake {
+				0%,
+				100% {
+					transform: rotate(-2deg);
+				}
+				50% {
+					transform: rotate(0deg);
+				}
+			}
+			.pin {
+				position: absolute;
+				font-size: 20px;
+				top: -10px;
+				right: -6px;
+			}
+			.watermark {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				color: #eaeaea;
+				font-size: 100px;
+				z-index: -1;
+				letter-spacing: 10px;
+				filter: blur(1.2px);
+			}
+			.title {
+				text-align: center;
+				letter-spacing: 1px;
+				position: relative;
+				&::after {
+					$width: 40%;
+					content: "";
+					width: $width;
+					height: 12px;
+					background-color: rgba(#f03a17, 0.4);
+					position: absolute;
+					bottom: 2px;
+					left: calc((100% - $width) / 2);
+					z-index: -1;
+				}
+			}
+			.content {
+				line-height: 1.6;
+				text-indent: 2em;
+				text-align: justify;
+				text-decoration: underline rgba(#f03a17, 0.5);
+				text-underline-offset:4px;
+			}
+			.sign {
+				margin-top: 4px;
+				text-align: right;
+			}
+		}
 
 		.title {
 			font-size: 20px;
@@ -133,6 +245,27 @@ export default {
 
 		li {
 			line-height: 1.6;
+		}
+	}
+
+	.bottom-line {
+		background-color: #dcdfe6;
+		position: relative;
+		height: 1px;
+		width: 94%;
+		margin: 24px 0;
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+
+		.bottom-text {
+			position: absolute;
+			background-color: #fff;
+			padding: 0 10px;
+			font-weight: 500;
+			color: #ccc;
+			font-size: 14px;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
 		}
 	}
 }

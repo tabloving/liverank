@@ -402,6 +402,7 @@ h2 {
 	border-radius: 50%;
 	background-color: #00adeb;
 	display: flex;
+	flex-shrink: 0; // 解决当未查找到直播用户时的缩放问题
 	justify-content: center;
 	align-items: center;
 	position: relative;
@@ -633,8 +634,28 @@ h2 {
 				align-items: center;
 				justify-content: center;
 
+				.info-card {
+					.card{
+						flex: 1
+					}
+				}
+
+				.livetime{
+					justify-content: center;
+				}
+
 				.livetit {
 					margin-bottom: 16px;
+				}
+
+				.maincon{
+					width: 92px;
+				}
+
+				.timebox{
+					.maincon{
+						width:168px
+					}
 				}
 			}
 		}

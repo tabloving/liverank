@@ -11,6 +11,7 @@
 			<el-input
 				v-if="showHot"
 				clearable
+				ref="input"
 				v-model.trim="keyword"
 				:placeholder="placeholder"
 				@keyup.enter.native.prevent="search"
@@ -19,6 +20,7 @@
 			<el-autocomplete
 				v-else
 				clearable
+				ref="input"
 				popper-class="suggest-autocomplement"
 				v-model.trim="keyword"
 				:placeholder="placeholder"
@@ -32,9 +34,9 @@
 					<span class="label">{{ item.label }}</span>
 				</template>
 			</el-autocomplete>
-			<div :class="[keyword ? '' : 'disabled', 'button']" @click="search">
+			<el-button type="primary" :disabled="!keyword" @click="search">
 				查询
-			</div>
+			</el-button>
 		</div>
 
 		<!-- hot tags -->
@@ -148,6 +150,9 @@ export default {
 		};
 	},
 	created() {
+		let session = window.sessionStorage.getItem("keyword");
+		this.key = session ?? this.key;
+		this.keyword = session;
 		this.$store.commit("getData", this);
 		this.$nextTick(() => {
 			if (this.$refs.settings.model.refresh) {
@@ -156,6 +161,10 @@ export default {
 		});
 	},
 	mounted() {
+		this.$nextTick(() => {
+			this.$refs.input.focus();
+		});
+
 		let dataInfo;
 		this.$nextTick(() => {
 			dataInfo = this.$refs.updatemsg.list[0];
@@ -223,6 +232,8 @@ export default {
 				this.$store.commit("getData", this);
 				this.timer = this.$Utils.clearTimer(this.timer);
 			}, 300);
+
+			window.sessionStorage.setItem("keyword", this.keyword);
 		},
 		hotSearch(key) {
 			this.keyword = key;
@@ -355,6 +366,7 @@ h2 a {
 	text-align: center;
 	position: relative;
 	transform: translateX(-8.5px);
+	border-radius: 6px;
 
 	&::before,
 	&::after {
@@ -436,6 +448,7 @@ h2 a {
 	border-radius: 0;
 	color: #00adeb;
 	transition: 0.4s linear;
+	border-radius: 4px 0 0 4px;
 }
 
 .search ::v-deep .el-input__inner:focus {
@@ -443,23 +456,19 @@ h2 a {
 	border-right: 1px solid transparent;
 }
 
-.search .button {
-	display: inline-block;
+.search .el-button {
 	width: 80px;
-	line-height: 46px;
 	font-size: 20px;
 	background-color: #00adeb;
 	color: #fff;
 	font-weight: bold;
 	letter-spacing: 2px;
-	cursor: pointer;
+	border-radius: 0 4px 4px 0;
 	transition: all 0.4s linear;
 	vertical-align: bottom;
 }
 
-.button.disabled {
-	// pointer-events: none;
-	cursor: not-allowed;
+.el-button.is-disabled {
 	background-color: #00adeb8f;
 }
 

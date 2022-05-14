@@ -117,7 +117,7 @@ export default {
 					des: "初版发布，能实现基本查询。",
 					main: [
 						"实现基本查询功能",
-						"支持房间号、UID、房间ID等查询条件",
+						"支持UP名、UID、房间ID等查询条件",
 						"能够查询B站取消显示的人气数",
 						"自动定时刷新数据",
 					],
@@ -223,7 +223,7 @@ export default {
 				text-indent: 2em;
 				text-align: justify;
 				text-decoration: underline rgba(#f03a17, 0.5);
-				text-underline-offset:4px;
+				text-underline-offset: 4px;
 			}
 			.sign {
 				margin-top: 4px;

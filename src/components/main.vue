@@ -1,9 +1,13 @@
 <template>
 	<div id="container">
 		<i class="el-icon-setting setting" @click="open('settings')"></i>
-		<h2>{{ title }}</h2>
+		<h2>
+			<a href="/">{{ title }}</a>
+		</h2>
+
 		<!-- search input -->
-		<div class="search">
+		<div :class="['search',keyword ? 'actived' : '']">
+			<!-- 搜索主体 -->
 			<el-input
 				v-if="showHot"
 				clearable
@@ -32,6 +36,7 @@
 				查询
 			</div>
 		</div>
+
 		<!-- hot tags -->
 		<div v-if="showHot" class="hotbox">
 			<el-tooltip
@@ -134,7 +139,7 @@ export default {
 	data() {
 		return {
 			title: "哔哩哔哩直播热度查询",
-			placeholder: "请输入需要查询的主播、UID或房间号",
+			placeholder: "输入主播信息或房间号查询  ^_^",
 			keyword: "",
 			key: defaultID,
 			timer: null,
@@ -209,10 +214,10 @@ export default {
 		},
 		search() {
 			this.timer = this.$Utils.clearTimer(this.timer);
-			let activedTag = this.hotList.find((tag)=>{
-				return this.keyword === tag.label
-			})
-			this.keyword = (activedTag && activedTag.value) ?? this.keyword
+			let activedTag = this.hotList.find((tag) => {
+				return this.keyword === tag.label;
+			});
+			this.keyword = (activedTag && activedTag.value) ?? this.keyword;
 			this.timer = setTimeout(() => {
 				this.key = this.keyword;
 				this.$store.commit("getData", this);
@@ -228,7 +233,7 @@ export default {
 			this.hotList = list;
 		},
 		calcLiveDuring(date) {
-			date = date.replace(/-/g, '/') // 兼容IOS上显示 NaN
+			date = date.replace(/-/g, "/"); // 兼容IOS上显示 NaN
 			let startTime = new Date(date).getTime(); // 开始时间
 			let endTime = Date.now(); // 结束时间
 			let usedTime = endTime - startTime; // 相差的毫秒数
@@ -238,10 +243,10 @@ export default {
 			let leavel2 = leavel % (3600 * 1000); // 计算剩余小时后剩余的毫秒数
 			let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
 			let leavel3 = leavel2 % (60 * 1000); // 计算分钟数后剩余的毫秒数
-			let seconds =  Math.floor(leavel3 / (1000)); 
-			let d = days? `${days} 天` : "";
+			let seconds = Math.floor(leavel3 / 1000);
+			let d = days ? `${days} 天` : "";
 			let h = hours ? `${hours} 小时` : "";
-			let diff = `${d} ${h} ${minutes} 分钟`
+			let diff = `${d} ${h} ${minutes} 分钟`;
 			return diff.trim();
 		},
 	},
@@ -329,12 +334,18 @@ export default {
 	}
 }
 
-h2 {
+h2 a {
 	font-size: 26px;
 	letter-spacing: 1px;
 	text-align: center;
 	margin-top: 30px;
 	color: #00adeb;
+	transition: all 0.6s linear;
+	text-decoration: underline wavy rgba($color: #00adeb, $alpha: 0) 2px;
+	text-underline-offset: 6px;
+	&:hover {
+		text-decoration: underline wavy rgba($color: #00adeb, $alpha: 1) 2px;
+	}
 }
 
 .search {
@@ -342,15 +353,71 @@ h2 {
 	margin: 30px auto 0;
 	height: 46px;
 	text-align: center;
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: center;
-}
+	position: relative;
+	transform: translateX(-8.5px);
 
-::v-deep .search .el-input {
-	width: 500px;
-	height: 100%;
-	font-size: 20px;
+	&::before,
+	&::after {
+		$height: 10px;
+		content: "";
+		box-sizing: border-box;
+		width: 100%;
+		height: $height;
+		background: rgba(#00adeb, 0.1);
+		border: 1px solid #d8d8d8;
+		border-bottom: transparent;
+		position: absolute;
+		top: -$height;
+		left: 0;
+		transform: skew(-60deg);
+		transform-origin: bottom left;
+		transition: all 0.4s linear;
+	}
+
+	&::after {
+		content: "✖";
+		font-size: 10px;
+		color: red;
+		text-align: center;
+		line-height: 46px;
+		width: 17px;
+		height: 100%;
+		top: 0;
+		left: 100%;
+		transform: skew(0, -30deg);
+		transform-origin: top left;
+		border-left: transparent;
+		border-top: transparent;
+		border-bottom: 1px solid #d8d8d8;
+		background: rgba(#00adeb, 0.3);
+	}
+
+	&.actived {
+		&::before{
+			background: rgba(#00adeb, 0.2);
+		}
+		&::after {
+				content: "✔";
+				color: darkorange;
+				font-weight: bold;
+				background: rgba(#00adeb, 0.4);
+		}
+	}
+
+	.el-input {
+		width: calc(100% - 80px);
+		height: 100%;
+		font-size: 20px;
+	}
+
+	.el-autocomplete ::v-deep {
+		height: 100%;
+		width: calc(100% - 80px);
+		.el-input {
+			@extend .el-input;
+			width: 100%;
+		}
+	}
 }
 
 ::v-deep .el-input__inner {
@@ -371,6 +438,7 @@ h2 {
 }
 
 .search .button {
+	display: inline-block;
 	width: 80px;
 	line-height: 46px;
 	font-size: 20px;
@@ -380,6 +448,7 @@ h2 {
 	letter-spacing: 2px;
 	cursor: pointer;
 	transition: all 0.4s linear;
+	vertical-align: bottom;
 }
 
 .button.disabled {
@@ -616,12 +685,9 @@ h2 {
 		margin: 20px auto;
 
 		::v-deep .search .el-input {
-			width: 100%;
 			font-size: 14px;
 		}
-		.search .el-autocomplete {
-			width: 100%;
-		}
+
 		.mainInfo {
 			flex-flow: column wrap;
 			align-items: center;
@@ -635,12 +701,12 @@ h2 {
 				justify-content: center;
 
 				.info-card {
-					.card{
-						flex: 1
+					.card {
+						flex: 1;
 					}
 				}
 
-				.livetime{
+				.livetime {
 					justify-content: center;
 				}
 
@@ -648,13 +714,13 @@ h2 {
 					margin-bottom: 16px;
 				}
 
-				.maincon{
+				.maincon {
 					width: 92px;
 				}
 
-				.timebox{
-					.maincon{
-						width:168px
+				.timebox {
+					.maincon {
+						width: 168px;
 					}
 				}
 			}

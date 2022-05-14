@@ -3,12 +3,20 @@ $themes: (
     background-color: rgba(255,255,255,0.75),
     sec-bg: rgba(255,255,255,0.75),
     text-color: #444, 
-    box-shadow: 2px 2px 20px 5px #d8d8d8
+    box-shadow: 2px 2px 20px 5px #d8d8d8,
+    bg-top: linear-gradient(to right, rgba(0, 173, 235, 0.2) calc(100% - 80px), #00adeb8f 0),
+    bg-top-active: linear-gradient(to right, rgba(0, 173, 235, 0.3) calc(100% - 80px), rgba(#00adeb, 0.7) 0),
+    bg-side: #00adeb8f,
+    bg-side-active: rgba(#00adeb, 0.6)
   ),
   dark: (
     background-color: rgba(17,17,17,0.8),
     sec-bg: rgba(17,17,17,0.4),
     text-color: #fff,
-    box-shadow: 2px 2px 10px 5px #666
+    box-shadow: 2px 2px 10px 5px #666,
+    bg-top: linear-gradient(to right, rgba(#eee, 0.8) calc(100% - 80px), #00adeb8f 0),
+    bg-top-active: linear-gradient(to right, rgba(#ddd, 1) calc(100% - 80px), rgba(#00adeb, 1) 0),
+    bg-side: rgba(#00adeb,0.6),
+    bg-side-active: #00adeb
   )
 );

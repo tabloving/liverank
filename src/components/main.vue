@@ -6,7 +6,7 @@
 		</h2>
 
 		<!-- search input -->
-		<div :class="['search',keyword ? 'actived' : '']">
+		<div :class="['search', keyword ? 'actived' : '']">
 			<!-- 搜索主体 -->
 			<el-input
 				v-if="showHot"
@@ -358,14 +358,15 @@ h2 a {
 
 	&::before,
 	&::after {
+		@include themed() {
+			background-image: t("bg-top");
+		}
 		$height: 10px;
 		content: "";
 		box-sizing: border-box;
 		width: 100%;
 		height: $height;
-		background: rgba(#00adeb, 0.1);
-		border: 1px solid #d8d8d8;
-		border-bottom: transparent;
+		border: 1px solid #fff;
 		position: absolute;
 		top: -$height;
 		left: 0;
@@ -375,9 +376,10 @@ h2 a {
 	}
 
 	&::after {
-		content: "✖";
-		font-size: 10px;
-		color: red;
+		content: "X";
+		color: #fff;
+		font-size: 14px;
+		font-weight: bold;
 		text-align: center;
 		line-height: 46px;
 		width: 17px;
@@ -386,21 +388,25 @@ h2 a {
 		left: 100%;
 		transform: skew(0, -30deg);
 		transform-origin: top left;
-		border-left: transparent;
-		border-top: transparent;
-		border-bottom: 1px solid #d8d8d8;
-		background: rgba(#00adeb, 0.3);
+		@include themed() {
+			background: t("bg-side");
+		}
 	}
 
 	&.actived {
-		&::before{
-			background: rgba(#00adeb, 0.2);
+		&::before {
+			@include themed() {
+				background-image: t("bg-top-active");
+			}
 		}
 		&::after {
-				content: "✔";
-				color: darkorange;
-				font-weight: bold;
-				background: rgba(#00adeb, 0.4);
+			content: "❤";
+			font-size: 8px;
+			color: #f74444;
+			font-weight: bold;
+			@include themed() {
+				background: t("bg-side-active");
+			}
 		}
 	}
 

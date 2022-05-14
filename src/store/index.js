@@ -79,6 +79,7 @@ export default new Vuex.Store({
       })
         .then((result) => {
           if (result["data"]["code"] !== 0) return;
+  
           let data = result["data"]["data"]["result"];
           let res = data["live_room"] ?? data["live_user"];
           if (res) {
@@ -116,6 +117,8 @@ export default new Vuex.Store({
               message: '当前未查询到相关直播，请确认输入的信息无误后再试！'
             })
           }
+        }).catch(error=>{
+          payload.$message.error(`请求失败：${error.message}`);
         })
     },
     drawerControl(state,payload){

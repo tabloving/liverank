@@ -1,6 +1,6 @@
 <template>
 	<el-drawer
-		title="更新公告"
+		:title="$t('Main.changelog')"
 		:visible.sync="flag"
 		direction="rtl"
 		:before-close="close"
@@ -23,8 +23,8 @@
 				v-for="item in list"
 			>
 				<div class="section">
-					<div class="title">{{ item.date }} 更新清单</div>
-					<div class="des">{{ item.des }} 主要内容为：</div>
+					<div class="title">{{ `${item.date} ${$t('Main.updateList.title')}`}} </div>
+					<div class="des">{{ `${item.des} ${$t('Main.updateList.main')}` }}</div>
 					<ul v-for="(detail, index) in item.main" :key="detail">
 						<li>{{ index + 1 }}. {{ detail }}</li>
 					</ul>
@@ -33,7 +33,7 @@
 		</el-timeline>
 
 		<div class="bottom-line">
-			<div class="bottom-text">已经到底啦~</div>
+			<div class="bottom-text">{{$t('Main.isBottom')}}</div>
 		</div>
 	</el-drawer>
 </template>
@@ -46,9 +46,8 @@ export default {
 		return {
 			notice: {
 				show: true,
-				title: "诸公敬启",
-				content:
-					"本工具自上线迄今，陆续增添些许功能。主要目的：1）为了可视化查询B站取消的人气显示；2）个人学习练习。其功能纯粹、操作便当、界面整洁。承蒙多位朋友的使用、建议、反馈，才逐步完善。方今基本功能已经齐备，后续将只对现有内容进行常规维护，不再新增模块。再次感谢诸位的参与和喜欢，谢谢！再会~",
+				title: this.$t('Main.letter.title'),
+				content: this.$t('Main.letter.content'),
 				sign: "2022-5-14 变质的洋流",
 				watermark: "Bye",
 			},

@@ -1,8 +1,24 @@
 <template>
 	<div id="container">
 		<i class="el-icon-setting setting" @click="open('settings')"></i>
+		<!-- 语言设置 -->
+		<el-dropdown trigger="click" @command="changeLocale">
+			<span class="el-dropdown-link">
+				{{ LANG }}
+				<i class="el-icon-arrow-down el-icon--right"></i>
+			</span>
+			<el-dropdown-menu slot="dropdown">
+				<el-dropdown-item
+					v-for="lang in languages"
+					:key="lang.flag"
+					:command="lang.flag"
+					:disabled="lang.flag === $i18n.locale"
+					>{{ lang.label }}</el-dropdown-item
+				>
+			</el-dropdown-menu>
+		</el-dropdown>
 		<h2>
-			<a href="/">{{ title }}</a>
+			<a href="/">{{ $t(title) }}</a>
 		</h2>
 
 		<!-- search input -->
@@ -13,7 +29,7 @@
 				clearable
 				ref="input"
 				v-model.trim="keyword"
-				:placeholder="placeholder"
+				:placeholder="$t(placeholder)"
 				@keyup.enter.native.prevent="search"
 			>
 			</el-input>
@@ -34,8 +50,8 @@
 					<span class="label">{{ item.label }}</span>
 				</template>
 			</el-autocomplete>
-			<el-button type="primary" :disabled="!keyword" @click="search">
-				查询
+			<el-button type="primary" :icon="[$i18n.locale === 'zh' ? '' : 'el-icon-search']" :disabled="!keyword" @click="search">
+				{{$t('Main.search')}}
 			</el-button>
 		</div>
 
@@ -80,46 +96,46 @@
 
 				<div class="info-card">
 					<div class="card userbox uname">
-						<span class="label">UP</span>
+						<span class="label">{{$t('Main.liveInfo.label.up')}}</span>
 						<span class="maincon" v-html="liveInfo.uname"></span>
 					</div>
 					<div class="card userbox uid">
-						<span class="label">UID</span>
+						<span class="label">{{$t('Main.liveInfo.label.uid')}}</span>
 						<span class="maincon">{{ liveInfo.uid }}</span>
 					</div>
 					<div class="card userbox att">
-						<span class="label">粉丝数</span>
+						<span class="label">{{$t('Main.liveInfo.label.fans')}}</span>
 						<span class="maincon">{{ liveInfo.fans }}</span>
 					</div>
 
 					<div class="card roombox rid">
-						<span class="label">房间ID</span>
+						<span class="label">{{$t('Main.liveInfo.label.roomid')}}</span>
 						<span class="maincon">{{ liveInfo.roomid }}</span>
 					</div>
 					<div class="card roombox online">
-						<span class="label">人气</span>
+						<span class="label">{{$t('Main.liveInfo.label.online')}}</span>
 						<span class="maincon">{{ liveInfo.online }}</span>
 					</div>
 					<div class="card roombox watched">
-						<span class="label">看过</span>
+						<span class="label">{{$t('Main.liveInfo.label.watched')}}</span>
 						<span class="maincon">{{ liveInfo.watched }}</span>
 					</div>
 
 					<div class="livetime" v-if="liveInfo.status">
 						<div class="card timebox starttime">
-							<span class="label">开始直播</span>
+							<span class="label">{{$t('Main.liveInfo.label.start')}}</span>
 							<span class="maincon">{{ liveInfo.live_time }}</span>
 						</div>
 
 						<div class="card timebox liveduring">
-							<span class="label">直播时长</span>
+							<span class="label">{{$t('Main.liveInfo.label.during')}}</span>
 							<span class="maincon">{{ liveduring }}</span>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="openMsg" @click="open('updatemsg')">更新公告</div>
+		<div class="openMsg" @click="open('updatemsg')">{{$t('Main.changelog')}}</div>
 		<update-msg :flag="updatemsg" ref="updatemsg"></update-msg>
 		<settings :flag="settings" @changeHot="changeHot" ref="settings"></settings>
 	</div>
@@ -140,16 +156,21 @@ export default {
 	},
 	data() {
 		return {
-			title: "哔哩哔哩直播热度查询",
-			placeholder: "输入主播信息或房间号查询  ^_^",
+			title: "Main.title",
+			placeholder: "Main.placeholder",
 			keyword: "",
 			key: defaultID,
 			timer: null,
 			showHot: true,
 			hotList: [],
+			languages: [
+				{ flag: "zh", label: "简体中文" },
+				{ flag: "en", label: "English" },
+			],
 		};
 	},
 	created() {
+		this.$i18n.locale = window.sessionStorage.getItem('lang') ?? this.$i18n.locale
 		let session = window.sessionStorage.getItem("keyword");
 		this.key = session ?? this.key;
 		this.keyword = session;
@@ -183,8 +204,8 @@ export default {
 					closeOnClickModal: false,
 					showClose: false,
 					dangerouslyUseHTMLString: true,
-					confirmButtonText: "知道啦",
-					cancelButtonText: "不再提醒",
+					confirmButtonText: this.$t('Main.message.confirm'),
+					cancelButtonText: this.$t('Main.message.cancel'),
 				})
 					.then(() => {})
 					.catch(() => {
@@ -196,6 +217,9 @@ export default {
 	computed: {
 		...mapState(["liveInfo", "resData", "updatemsg", "settings"]),
 		...mapGetters(["liveMsg", "toRoom", "liveTitle"]),
+		LANG(){
+			return this.$i18n.locale === 'en' ? 'English' : '简体中文'
+		},
 		liveduring() {
 			return this.calcLiveDuring(this.liveInfo["live_time"]);
 		},
@@ -205,6 +229,10 @@ export default {
 		...mapActions(["doSearch"]),
 		open(name) {
 			this.drawerControl([name, "on"]);
+		},
+		changeLocale(lang) {
+			this.$i18n.locale = lang;
+			window.sessionStorage.setItem('lang',lang)
 		},
 		suggest(query, cb) {
 			let list = this.hotList.map((item) => {
@@ -255,9 +283,9 @@ export default {
 			let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
 			let leavel3 = leavel2 % (60 * 1000); // 计算分钟数后剩余的毫秒数
 			let seconds = Math.floor(leavel3 / 1000);
-			let d = days ? `${days} 天` : "";
-			let h = hours ? `${hours} 小时` : "";
-			let diff = `${d} ${h} ${minutes} 分钟`;
+			let d = days ? this.$t('Main.liveInfo.time.day',{days: days}) : "";
+			let h = hours ? this.$t('Main.liveInfo.time.hour',{hours: hours}) : (d ? this.$t('Main.liveInfo.time.hour',{hours: 0}) : "");
+			let diff = `${d} ${h} ${this.$t('Main.liveInfo.time.min',{mins: minutes})}`;
 			return diff.trim();
 		},
 	},
@@ -326,6 +354,18 @@ export default {
 	@include themed() {
 		background: t("sec-bg");
 		box-shadow: t("box-shadow");
+	}
+}
+
+.el-dropdown {
+	font-size: 16px;
+	position: absolute;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	cursor: pointer;
+	@include themed() {
+		color: t("text-color");
 	}
 }
 
@@ -698,6 +738,10 @@ h2 a {
 		max-width: 98%;
 		padding: 20px 20px 60px;
 		margin: 20px auto;
+
+		h2 a {
+			margin-top: 50px;
+		}
 
 		::v-deep .search .el-input {
 			font-size: 14px;

@@ -1,6 +1,7 @@
+
 <template>
 	<el-drawer
-		title="个性化设置"
+		:title="$t('Settings.title')"
 		:visible.sync="flag"
 		direction="rtl"
 		:before-close="validateIsSave"
@@ -11,14 +12,14 @@
 			:key="item.title"
 		>
 			<p :class="['title', item.type === 'switch' ? 'inline-title' : '']">
-				{{ item.title }}
+				{{ $t(item.title) }}
 			</p>
 			<el-input
 				v-if="item.type === 'input'"
 				:maxlength="item.maxlength"
 				v-model.trim="model[item.model]"
 				:class="[item.validate && validateErr ? 'err' : '']"
-				:placeholder="item.placeholder"
+				:placeholder="$t(item.placeholder)"
 				:disabled="model[item.disabledKey]"
 				:ref="item.refName"
 				@keyup.enter.native="validate(item['validateMethod'])"
@@ -36,11 +37,11 @@
 			</el-switch>
 			<transition name="fade" mode="out-in">
 				<p class="errmsg" v-show="item.validateMethod && validateErr">
-					{{ item.validatemsg }}
+					{{ $t(item.validatemsg) }}
 				</p>
 			</transition>
 			<!-- 描述 -->
-			<p v-if="item.des" class="des">{{ item.des }}</p>
+			<p v-if="item.des" class="des">{{ $t(item.des,{days: STORE_DAYS}) }}</p>
 			<!-- 快捷标签 -->
 			<div class="hottags" v-if="item.tags && model.hotList.length">
 				<span
@@ -58,9 +59,7 @@
 				></span>
 			</div>
 			<!-- empty placehodler -->
-			<el-empty class="tagmessage" :image-size="80" v-if="item.tags && !model.hotList.length" description="您还没有添加任何快捷标签！"></el-empty>
-
-			
+			<el-empty class="tagmessage" :image-size="80" v-if="item.tags && !model.hotList.length" :description="$t('Settings.validateMsg.addTag.noTags')"></el-empty>
 		</section>
 
 		<el-button
@@ -68,7 +67,7 @@
 			class="save"
 			@click="handleSave"
 			:disabled="validateErr"
-			>保存设置</el-button
+			>{{$t('Settings.save')}}</el-button
 		>
 	</el-drawer>
 </template>
@@ -92,6 +91,7 @@ export default {
 	data() {
 		return {
 			validateErr: false,
+			STORE_DAYS: 20,
 			model: {
 				isDark: false,
 				refresh: true,
@@ -110,34 +110,34 @@ export default {
 			},
 			list: [
 				{
-					title: `默认查询值`,
+					title: 'Settings.defaultSearch.title',
 					type: "input",
-					des: `📢 数据存储在本地${STORE_DAYS}天，清缓存会同时清除数据，望周知！`,
-					placeholder: "请输入您需要设置的值",
+					des: `Settings.defaultSearch.des`,
+					placeholder: "Settings.defaultSearch.placeholder",
 					validate: true,
 					maxlength: 10,
-					validatemsg: "输入不能为空。若想保持不变，请开启锁定",
+					validatemsg: "Settings.defaultSearch.validatemsg",
 					validateMethod: "validateDefaultID",
 					model: "defaultID",
 					refName: "defaultID",
 					disabledKey: "isLock",
 				},
-				{ title: "锁定默认查询", type: "switch", model: "isLock" },
-				{ title: "夜间模式开关", type: "switch", model: "isDark" },
+				{ title: "Settings.lockDefault.title", type: "switch", model: "isLock" },
+				{ title: "Settings.darkMode.title", type: "switch", model: "isDark" },
 				{
-					title: "自动刷新数据",
+					title: "Settings.autoRefresh.title",
 					type: "switch",
-					des: "开启后，将会每20s自动刷新一次数据，建议开启。V2.x版本已锁定开启。",
+					des: "Settings.autoRefresh.des",
 					model: "refresh",
 					disabled: true,
 				},
 				{
-					title: "快捷标签开关",
+					title: "Settings.hotTags.title",
 					type: "switch",
 					model: "showHot",
 				},
 				{
-					title: "快捷标签设置",
+					title: "Settings.setHotTags.title",
 					type: "input",
 					model: "tagInput",
 					maxlength: 15,
@@ -145,9 +145,9 @@ export default {
 					refName: "addTag",
 					tags: true,
 					list: "hotList",
-					placeholder: "请输入标签，按回车确认",
+					placeholder: "Settings.setHotTags.placeholder",
 					validateMethod: "validateHotTag",
-					des: '提示：使用冒号或者 / 可以设置别名，例如：lol：英雄联盟'
+					des: 'Settings.setHotTags.des'
 				},
 			],
 		};
@@ -212,7 +212,7 @@ export default {
 				if (res) {
 					this.$message({
 						type: "error",
-						message: `别名 或 值 已经存在了！无需重复添加。`,
+						message: this.$t('Settings.validateMsg.isExist'),
 					});
 				} else {
 					this.addTag(val, label);
@@ -235,8 +235,8 @@ export default {
 			});
 			if (!res) {
 				this.$confirm(
-					"你有未保存的数据，关闭后将放弃本次修改，是否继续关闭？",
-					"检测到有未保存的数据"
+					this.$t('Settings.validateMsg.confirm.content'),
+					this.$t('Settings.validateMsg.confirm.title')
 				)
 					.then((_) => {
 						for (let i of target) {
@@ -246,7 +246,7 @@ export default {
 
 						this.drawerControl(["settings", "off"]);
 						this.$message({
-							message: "您取消了设置",
+							message: this.$t('Settings.validateMsg.cancel'),
 							type: "warning",
 						});
 					})
@@ -257,7 +257,7 @@ export default {
 		},
 		setTheme() {
 			if (getLocal("isDark") === true) {
-				window.document.documentElement.setAttribute("data-theme", "dark");
+				document.documentElement.setAttribute("data-theme", "dark");
 			} else {
 				window.document.documentElement.setAttribute("data-theme", "light");
 			}
@@ -270,10 +270,10 @@ export default {
 				this.model.hotList.push({ value: val, label: label });
 			} else {
 				this.model.isFull = true;
-				this.model.tagInput = "最多支持5个，请删除后再添加";
+				this.model.tagInput = this.$t('Settings.validateMsg.addTag.input');
 				this.$message({
 					type: "error",
-					message: "最多支持5个快捷标签！",
+					message: this.$t('Settings.validateMsg.addTag.message'),
 				});
 			}
 		},
@@ -341,12 +341,12 @@ export default {
 			});
 			if (res) {
 				this.$message({
-					message: "没有数据更改！",
+					message: this.$t('Settings.validateMsg.save.noChange'),
 					type: "warning",
 				});
 			} else {
 				this.$message({
-					message: "恭喜你，设置成功！",
+					message: this.$t('Settings.validateMsg.save.success'),
 					type: "success",
 				});
 			}

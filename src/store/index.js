@@ -2,10 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import axios from 'axios';
+
 const instance = axios.create({
   baseURL: '/api',
   timeout: 3000
 })
+
 Vue.use(Vuex)
 
 let msg = [

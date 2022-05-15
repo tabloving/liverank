@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import i18n from '../locale'
 import axios from 'axios';
 
 const instance = axios.create({
@@ -10,26 +10,19 @@ const instance = axios.create({
 
 Vue.use(Vuex)
 
-let msg = [
-  "跳广播体操",
-  "突破次元壁",
-  "思考人生",
-  "追番",
-  "觅食",
-  "偷看小姐姐",
-];
-let offmsg = msg[Math.floor(Math.random() * msg.length)];
 export default new Vuex.Store({
   state: {
     resData: 0,
+    lang: i18n.locale,
+    msg: ['Store.msg.msg1', 'Store.msg.msg2', 'Store.msg.msg3', 'Store.msg.msg4', 'Store.msg.msg5', 'Store.msg.msg6'],
     liveInfo: {
       tit: '',
-      uid: '未知',
-      uname: '未知',
+      uid: i18n.t('Store.noResult.unknown'),
+      uname: i18n.t('Store.noResult.unknown'),
       uface: '',
       fans: 0,
       status: 0,
-      cate: '未知分区',
+      cate: i18n.t('Store.noResult.area'),
       roomid: 0,
       online: 0,
       watched: 0,
@@ -43,22 +36,25 @@ export default new Vuex.Store({
       let msg;
       switch (state.liveInfo.status) {
         case 0:
-          msg = '未开播';
+          msg = i18n.t('Store.status.off');
           break;
         case 1:
-          msg = '直播中';
+          msg = i18n.t('Store.status.live');
           break;
         case 2:
-          msg = '轮播中';
+          msg = i18n.t('Store.status.loop');
           break;
       }
       return msg
     },
+    offmsg(state) {
+      return state.msg[Math.floor(Math.random() * state.msg.length)]
+    },
     toRoom(state) {
       return state.resData ? `https://live.bilibili.com/${state.liveInfo.roomid}` : '/';
     },
-    liveTitle(state) {
-      return state.resData ? state.liveInfo.status ? state.liveInfo.tit : `主播正在${offmsg}` : '该用户还未创建直播间'
+    liveTitle(state, getters) {
+      return state.resData ? state.liveInfo.status ? state.liveInfo.tit : i18n.t('Store.title', { doing: i18n.t(getters.offmsg) }) : i18n.t('Store.noResult.title')
     }
   },
   mutations: {
@@ -81,7 +77,7 @@ export default new Vuex.Store({
       })
         .then((result) => {
           if (result["data"]["code"] !== 0) return;
-  
+
           let data = result["data"]["data"]["result"];
           let res = data["live_room"] ?? data["live_user"];
           if (res) {
@@ -94,7 +90,7 @@ export default new Vuex.Store({
               uface: info['uface'],
               fans: info['attentions'],
               status: info['live_status'],
-              cate: info['cate_name'] || '未知分区',
+              cate: info['cate_name'] || i18n.t('Store.noResult.area'),
               roomid: info['roomid'],
               online: info['online'] || 0,
               watched: info["watched_show"] ? info["watched_show"]['num'] : 0,
@@ -104,35 +100,39 @@ export default new Vuex.Store({
             state.resData = 0
             state.liveInfo = {
               tit: '',
-              uid: '未知',
-              uname: payload.keyword || '未知',
+              uid: i18n.t('Store.noResult.unknown'),
+              uname: payload.keyword || i18n.t('Store.noResult.unknown'),
               uface: '',
-              fans: '未知',
+              fans: i18n.t('Store.noResult.unknown'),
               status: 0,
-              cate: '未知',
-              roomid: '未知',
-              online: '未知',
-              watched: '未知',
+              cate: i18n.t('Store.noResult.area'),
+              roomid: i18n.t('Store.noResult.unknown'),
+              online: i18n.t('Store.noResult.unknown'),
+              watched: i18n.t('Store.noResult.unknown'),
             };
             payload.$notify.warning({
-              title: '提示',
-              message: '当前未查询到相关直播，请确认输入的信息无误后再试！'
+              title: `${i18n.t('Store.noResult.msg.title')}`,
+              message: i18n.t('Store.noResult.msg.message')
             })
           }
-        }).catch(error=>{
-          payload.$message.error(`请求失败：${error.message}`);
+        }).catch(error => {
+          payload.$message.error(`${i18n.t('Store.error')}：${error.message}`);
         })
     },
-    drawerControl(state,payload){
-      let [target,op] = payload
+    drawerControl(state, payload) {
+      let [target, op] = payload
       let ret = op === 'on' ? true : false
       state[target] = ret
     },
+    changeLang(state, payload) {
+      state.lang = i18n.locale = payload
+      sessionStorage.setItem('lang', payload)
+    }
   },
   actions: {
     doSearch({ commit, state }, payload) {
-    setInterval(() => {
-      state.resData && commit('getData', payload);
+      setInterval(() => {
+        state.resData && commit('getData', payload);
       }, 20000)
     }
   },

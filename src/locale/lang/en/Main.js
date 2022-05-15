@@ -22,7 +22,7 @@ export default {
       during: 'Duration',
     },
     time: {
-      day: '{days} D',
+      day: '{days} DAYS',
       hour: '{hours}h',
       min: '{mins}min',
     },

@@ -2,7 +2,7 @@
 	<div id="container">
 		<i class="el-icon-setting setting" @click="open('settings')"></i>
 		<!-- 语言设置 -->
-		<el-dropdown trigger="click" @command="changeLocale">
+		<el-dropdown trigger="click" @command="changeLang">
 			<span class="el-dropdown-link">
 				{{ LANG }}
 				<i class="el-icon-arrow-down el-icon--right"></i>
@@ -50,7 +50,7 @@
 					<span class="label">{{ item.label }}</span>
 				</template>
 			</el-autocomplete>
-			<el-button type="primary" :icon="[$i18n.locale === 'zh' ? '' : 'el-icon-search']" :disabled="!keyword" @click="search">
+			<el-button type="primary" :icon="$i18n.locale === 'zh' ? '' : 'el-icon-search'" :disabled="!keyword" @click="search">
 				{{$t('Main.search')}}
 			</el-button>
 		</div>
@@ -170,7 +170,6 @@ export default {
 		};
 	},
 	created() {
-		this.$i18n.locale = window.sessionStorage.getItem('lang') ?? this.$i18n.locale
 		let session = window.sessionStorage.getItem("keyword");
 		this.key = session ?? this.key;
 		this.keyword = session;
@@ -182,12 +181,9 @@ export default {
 		});
 	},
 	mounted() {
-		this.$nextTick(() => {
-			this.$refs.input.focus();
-		});
-
 		let dataInfo;
 		this.$nextTick(() => {
+			this.$refs.input.focus();
 			dataInfo = this.$refs.updatemsg.list[0];
 			let title = `${dataInfo.date} 更新公告`;
 			let str = dataInfo.main
@@ -215,25 +211,26 @@ export default {
 		});
 	},
 	computed: {
-		...mapState(["liveInfo", "resData", "updatemsg", "settings"]),
+		...mapState(["liveInfo", "resData", "updatemsg", "settings",'lang']),
 		...mapGetters(["liveMsg", "toRoom", "liveTitle"]),
 		LANG(){
-			return this.$i18n.locale === 'en' ? 'English' : '简体中文'
+			return this.lang === 'en' ? 'English' : '简体中文'
 		},
 		liveduring() {
 			return this.calcLiveDuring(this.liveInfo["live_time"]);
 		},
 	},
 	methods: {
-		...mapMutations(["drawerControl"]),
+		...mapMutations(["drawerControl",'changeLang']),
 		...mapActions(["doSearch"]),
 		open(name) {
 			this.drawerControl([name, "on"]);
 		},
-		changeLocale(lang) {
-			this.$i18n.locale = lang;
-			window.sessionStorage.setItem('lang',lang)
-		},
+		// changeLocale(lang) {
+		// 	this.$i18n.locale = lang;
+		// 	this.lang = lang
+		// 	window.sessionStorage.setItem('lang',lang)
+		// },
 		suggest(query, cb) {
 			let list = this.hotList.map((item) => {
 				return { value: item.value, label: item.label };

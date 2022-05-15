@@ -8,8 +8,8 @@
 		<div class="section notice" v-if="notice.show">
 			<span class="pin">📌</span>
 			<span class="watermark">{{ notice.watermark }}</span>
-			<div class="title">{{ notice.title }}</div>
-			<div class="content">{{ notice.content }}</div>
+			<div class="title">{{ $t(notice.title) }}</div>
+			<div class="content">{{ $t(notice.content) }}</div>
 			<div class="sign">{{ notice.sign }}</div>
 		</div>
 
@@ -46,8 +46,8 @@ export default {
 		return {
 			notice: {
 				show: true,
-				title: this.$t('Main.letter.title'),
-				content: this.$t('Main.letter.content'),
+				title: 'Main.letter.title',
+				content: 'Main.letter.content',
 				sign: "2022-5-14 变质的洋流",
 				watermark: "Bye",
 			},

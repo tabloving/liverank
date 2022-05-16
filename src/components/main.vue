@@ -185,7 +185,7 @@ export default {
 		this.$nextTick(() => {
 			this.$refs.input.focus();
 			dataInfo = this.$refs.updatemsg.list[0];
-			let title = `${dataInfo.date} 更新公告`;
+			let title = `${dataInfo.date} ${this.$t('Main.updateList.title')}`;
 			let str = dataInfo.main
 				.map((item, index) => {
 					return index === 0
@@ -193,7 +193,7 @@ export default {
 						: `<ol> ${index + 1}. ${item} </ol>`;
 				})
 				.join("");
-			let content = `${dataInfo.des}主要内容为：${str}`;
+			let content = `${dataInfo.des}${this.$t('Main.updateList.main')}${str}`;
 			if (!Storage.get("user")) {
 				this.$confirm(content, title, {
 					closeOnPressEscape: false,

@@ -14,6 +14,7 @@ const lang = sessionStorage.getItem('lang') || 'zh'
 const i18n = new VueI18n({
   locale: lang, // 默认语言
   fallbackLocale: 'zh', // 设置回滚本地语言
+  silentTranslationWarn: true, // 去掉警告
   messages: {
     en: {
       ...enLocale,

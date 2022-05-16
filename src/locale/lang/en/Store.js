@@ -20,7 +20,7 @@ export default {
     msg6: 'Peeking at girls',
   },
   status: {
-    live: 'Living',
+    live: 'Live',
     off: 'offline',
     loop: 'broadcast',
   },

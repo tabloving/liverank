@@ -17,15 +17,15 @@ export default new Vuex.Store({
     msg: ['Store.msg.msg1', 'Store.msg.msg2', 'Store.msg.msg3', 'Store.msg.msg4', 'Store.msg.msg5', 'Store.msg.msg6'],
     liveInfo: {
       tit: '',
-      uid: i18n.t('Store.noResult.unknown'),
-      uname: i18n.t('Store.noResult.unknown'),
+      uid: 'Store.noResult.unknown',
+      uname: 'Store.noResult.unknown',
       uface: '',
-      fans: 0,
+      fans: 'Store.noResult.unknown',
       status: 0,
-      cate: i18n.t('Store.noResult.area'),
-      roomid: 0,
-      online: 0,
-      watched: 0,
+      cate: 'Store.noResult.area',
+      roomid: 'Store.noResult.unknown',
+      online: 'Store.noResult.unknown',
+      watched: 'Store.noResult.unknown',
       live_time: 0
     },
     updatemsg: false,
@@ -90,25 +90,25 @@ export default new Vuex.Store({
               uface: info['uface'],
               fans: info['attentions'],
               status: info['live_status'],
-              cate: info['cate_name'] || i18n.t('Store.noResult.area'),
+              cate: info['cate_name'] || 'Store.noResult.area',
               roomid: info['roomid'],
-              online: info['online'] || 0,
-              watched: info["watched_show"] ? info["watched_show"]['num'] : 0,
+              online: info['online'] || '0',
+              watched: info["watched_show"] ? info["watched_show"]['num'] : '0',
               live_time: info['live_time']
             }
           } else {
             state.resData = 0
             state.liveInfo = {
               tit: '',
-              uid: i18n.t('Store.noResult.unknown'),
-              uname: payload.keyword || i18n.t('Store.noResult.unknown'),
+              uid:'Store.noResult.unknown',
+              uname: payload.keyword || 'Store.noResult.unknown',
               uface: '',
-              fans: i18n.t('Store.noResult.unknown'),
+              fans: 'Store.noResult.unknown',
               status: 0,
-              cate: i18n.t('Store.noResult.area'),
-              roomid: i18n.t('Store.noResult.unknown'),
-              online: i18n.t('Store.noResult.unknown'),
-              watched: i18n.t('Store.noResult.unknown'),
+              cate: 'Store.noResult.area',
+              roomid: 'Store.noResult.unknown',
+              online: 'Store.noResult.unknown',
+              watched: 'Store.noResult.unknown',
             };
             payload.$notify.warning({
               title: `${i18n.t('Store.noResult.msg.title')}`,
@@ -125,7 +125,7 @@ export default new Vuex.Store({
       state[target] = ret
     },
     changeLang(state, payload) {
-      state.lang = i18n.locale = payload
+      i18n.locale = state.lang  = payload
       sessionStorage.setItem('lang', payload)
     }
   },

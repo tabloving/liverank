@@ -4,7 +4,7 @@ export default {
   defaultSearch: {
     title: 'Default Search Value',
     des: '📢 The data is stored locally for {days} days, clearing the cache will clear the data at the same time.' ,
-    placeholder: 'Please input',
+    placeholder: 'Input your default key',
     validatemsg: 'The input cannot be empty. If you want to leave it unchanged, please turn on locking',
   },
   lockDefault: {

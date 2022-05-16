@@ -48,16 +48,17 @@ export default {
 				show: true,
 				title: 'Main.letter.title',
 				content: 'Main.letter.content',
-				sign: "2022-5-14 变质的洋流",
+				sign: "2022-5-15 变质的洋流",
 				watermark: "Bye",
 			},
 			list: [
 				{
-					date: "2022.5.14",
+					date: "2022.5.15",
 					des: "快捷搜索功能完善与优化，完成移动端适配。",
 					main: [
 						"新增直播时间显示",
 						"新增移动端样式适配",
+						"新增国际化方案",
 						"关闭快捷标签，输入时新增联想提示",
 						"开启快捷标签，新增点击后的标签样式区分",
 						"优化请求处理逻辑",
@@ -65,7 +66,7 @@ export default {
 					],
 				},
 				{
-					date: "2022.5.10",
+					date: "2022.5.11",
 					des: "新增快捷搜索、BUG FIXED。",
 					main: [
 						"新增快捷搜索入口",

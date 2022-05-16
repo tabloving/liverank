@@ -39,7 +39,7 @@
 				ref="input"
 				popper-class="suggest-autocomplement"
 				v-model.trim="keyword"
-				:placeholder="placeholder"
+				:placeholder="$t(placeholder)"
 				:trigger-on-focus="false"
 				:fetch-suggestions="suggest"
 				@keyup.enter.native.prevent="search"
@@ -91,34 +91,34 @@
 					<a v-else href="javascript:void(0)"
 						><span class="tit" v-html="liveTitle"></span
 					></a>
-					<span class="cate">{{ liveInfo.cate }}</span>
+					<span class="cate">{{ $t(liveInfo.cate) }}</span>
 				</div>
 
 				<div class="info-card">
 					<div class="card userbox uname">
 						<span class="label">{{$t('Main.liveInfo.label.up')}}</span>
-						<span class="maincon" v-html="liveInfo.uname"></span>
+						<span class="maincon" v-html="$t(liveInfo.uname)"></span>
 					</div>
 					<div class="card userbox uid">
 						<span class="label">{{$t('Main.liveInfo.label.uid')}}</span>
-						<span class="maincon">{{ liveInfo.uid }}</span>
+						<span class="maincon">{{ $t(liveInfo.uid) }}</span>
 					</div>
 					<div class="card userbox att">
 						<span class="label">{{$t('Main.liveInfo.label.fans')}}</span>
-						<span class="maincon">{{ liveInfo.fans }}</span>
+						<span class="maincon">{{ $t(liveInfo.fans) }}</span>
 					</div>
 
 					<div class="card roombox rid">
 						<span class="label">{{$t('Main.liveInfo.label.roomid')}}</span>
-						<span class="maincon">{{ liveInfo.roomid }}</span>
+						<span class="maincon">{{ $t(liveInfo.roomid) }}</span>
 					</div>
 					<div class="card roombox online">
 						<span class="label">{{$t('Main.liveInfo.label.online')}}</span>
-						<span class="maincon">{{ liveInfo.online }}</span>
+						<span class="maincon">{{ $t(liveInfo.online) }}</span>
 					</div>
 					<div class="card roombox watched">
 						<span class="label">{{$t('Main.liveInfo.label.watched')}}</span>
-						<span class="maincon">{{ liveInfo.watched }}</span>
+						<span class="maincon">{{ $t(liveInfo.watched) }}</span>
 					</div>
 
 					<div class="livetime" v-if="liveInfo.status">
@@ -226,11 +226,6 @@ export default {
 		open(name) {
 			this.drawerControl([name, "on"]);
 		},
-		// changeLocale(lang) {
-		// 	this.$i18n.locale = lang;
-		// 	this.lang = lang
-		// 	window.sessionStorage.setItem('lang',lang)
-		// },
 		suggest(query, cb) {
 			let list = this.hotList.map((item) => {
 				return { value: item.value, label: item.label };

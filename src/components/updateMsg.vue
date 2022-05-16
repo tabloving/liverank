@@ -171,6 +171,7 @@ export default {
 			transform: rotate(-2deg);
 			margin-top: 20px;
 			margin-bottom: 30px;
+			margin-left: 6%;
 			transform-origin: top right;
 
 			&:hover {
